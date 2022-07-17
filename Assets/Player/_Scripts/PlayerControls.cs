@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class @PlayerControls : IInputActionCollection, IDisposable
+public partial class @PlayerControls : IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
     public @PlayerControls()
@@ -24,7 +24,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""d0e0e595-7581-4307-ad2e-4674c2c8209e"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Action"",
@@ -32,7 +33,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""f9c86598-48d1-4675-bf24-2a6191ccf5cc"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Reload"",
@@ -40,7 +42,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""99ed26f3-3399-42c3-bcd0-dc01872eda2c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -188,7 +191,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""65d5b56c-195b-4cfc-80eb-c0ffdd3fd269"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -215,7 +219,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""81a52657-59c9-4909-8bef-9170141e0a9c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -331,6 +336,16 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public void Disable()
     {
         asset.Disable();
+    }
+    public IEnumerable<InputBinding> bindings => asset.bindings;
+
+    public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
+    {
+        return asset.FindAction(actionNameOrId, throwIfNotFound);
+    }
+    public int FindBinding(InputBinding bindingMask, out InputAction action)
+    {
+        return asset.FindBinding(bindingMask, out action);
     }
 
     // Move
