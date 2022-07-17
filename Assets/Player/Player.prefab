@@ -71,13 +71,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: b066d857bf58f3a489bd2df16b49761d, type: 3}
+  m_SortingOrder: 5
+  m_Sprite: {fileID: -6219055189398801932, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -94,6 +94,9 @@ GameObject:
   - component: {fileID: 1022033372372489532}
   - component: {fileID: 4605368625561628739}
   - component: {fileID: 970183401038960453}
+  - component: {fileID: 4643238264434834921}
+  - component: {fileID: 363368147}
+  - component: {fileID: 363368151}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -129,9 +132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea2145756d606c4b91bcb82b8057964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
-  radius: 5
-  isMoving: 0
+  dice: {fileID: 2780192814449194030}
+  mode: 0
 --- !u!114 &970183401038960453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +179,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4605368625561628739}
         m_TargetAssemblyTypeName: PlayerLink, Assembly-CSharp
-        m_MethodName: OnAction
+        m_MethodName: OnPlace
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -230,6 +232,64 @@ MonoBehaviour:
   m_DefaultActionMap: Move
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &4643238264434834921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022033372372489522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c2e486eefeecfb4eae615dc3e2d4ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTime: 0.2
+  isMakingStep: 0
+  isMoving: 0
+  movementGridPrefab: {fileID: 620413770357628004, guid: 6b145c32dc4b8b1488cfbb52e134fdd2, type: 3}
+  spriteRenderer: {fileID: 1022033370557515924}
+  spriteUp: {fileID: 3963274365136324983, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
+  spriteLeft: {fileID: -1395896317315271363, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
+  spriteDown: {fileID: -6219055189398801932, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
+  spriteRight: {fileID: 4635374456139009237, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
+--- !u!58 &363368147
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022033372372489522}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2
+--- !u!50 &363368151
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022033372372489522}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!1 &6922899742282583833
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,3 +334,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rollTime: 1
+  diceValue: 0

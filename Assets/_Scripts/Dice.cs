@@ -36,7 +36,7 @@ public class Dice : MonoBehaviour
 
     #region Dice Value
     [SerializeField] private float rollTime;
-	private int diceValue;
+	[SerializeField] private int diceValue;
 	public int DiceValue { get { return diceValue; } }
 
 

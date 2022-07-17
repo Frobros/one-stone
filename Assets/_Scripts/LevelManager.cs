@@ -7,11 +7,7 @@ using UnityEngine.Tilemaps;
 
 public enum TerrainType
 {
-    WATER = 'w',
-    GRASS = 'g',
-    MOUNTAIN = 'm',
-    FOREST = 'f',
-    PLAYER = 'p'
+    GROUND = 'g'
 }
 
 [Serializable]
@@ -49,10 +45,6 @@ public class LevelManager : MonoBehaviour
     {
         foreach (var terrain in terrainList)
         {
-            if (terrain.tilemap.GetTile(cell) != null)
-            {
-                Debug.Log(terrain);
-            }
             if (terrain.isWalkable && terrain.tilemap.GetTile(cell) != null)
             {
                 return true;

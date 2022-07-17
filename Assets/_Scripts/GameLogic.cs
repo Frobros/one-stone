@@ -20,11 +20,6 @@ public class GameLogic : MonoBehaviour
     public void SpawnPlayer(Vector3Int tilePosition)
     {
         Vector3 pos = FindObjectOfType<Grid>().GetCellCenterWorld(tilePosition);
-        // Transform player = Instantiate(playerPrefab, pos, Quaternion.identity).transform;
-        UIManager.Instance.SetPlayerDice(player.GetComponentInChildren<Dice>());
-
-        Camera.main.transform.parent = player;
-        Camera.main.transform.position = new Vector3(player.position.x, player.position.y, Camera.main.transform.position.z);
     }
 
     public void OnReloadScene()
@@ -38,18 +33,48 @@ public class GameLogic : MonoBehaviour
 
     public void Start()
     {
-        SwitchToRollDiceMode();
+        SwitchToPlayerRollDiceMode();
+        enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
     }
 
-    public void SwitchToRollDiceMode()
+    public void SwitchToPlayerRollDiceMode()
     {
         FindObjectOfType<PlayerLink>().SwitchToRollDiceMode();
-        UIManager.Instance.OnRollDice();
+        UIManager.Instance.OnWaitForPlayerDiceRoll();
     }
 
-    public void SwitchToMoveMode()
+    public void SwitchToPlayerMoveMode()
     {
         FindObjectOfType<PlayerLink>().SwitchToMoveMode();
-        UIManager.Instance.OnMove();
+        UIManager.Instance.OnPlayerMove();
     }
+
+    #region Enemy
+    public List<Enemy> enemies = new List<Enemy>();
+    public int currentEnemy = 0;
+
+    public void SwitchToEnemyRollDiceMode()
+    {
+        currentEnemy = 0;
+        UIManager.Instance.OnWaitForEnemyDiceRoll(enemies[currentEnemy]);
+    }
+
+    public void NextEnemyRollDice()
+    {
+        currentEnemy++;
+
+        if (currentEnemy >= enemies.Count)
+        {
+            SwitchToPlayerRollDiceMode();
+            return;
+        }
+        UIManager.Instance.OnWaitForEnemyDiceRoll(enemies[currentEnemy]);
+    }
+
+    public void SwitchToEnemyMoveMode()
+    {
+        UIManager.Instance.OnEnemyMove();
+        enemies[currentEnemy].InitEnemyMovement();
+    }
+    #endregion
 }
