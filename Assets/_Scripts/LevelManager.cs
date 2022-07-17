@@ -7,7 +7,11 @@ using UnityEngine.Tilemaps;
 
 public enum TerrainType
 {
-    GROUND = 'g'
+    GROUND = 'g',
+    BASE = 'b',
+    PLAYER = 'p',
+    ENEMY = 'e'
+
 }
 
 [Serializable]
@@ -21,7 +25,7 @@ public class Terrain
     public Tilemap tilemap;
     public TileBase tile;
     public bool isWalkable;
-
+    public bool isWalkableByEnemy;
 }
 
 public class LevelManager : MonoBehaviour
@@ -41,11 +45,19 @@ public class LevelManager : MonoBehaviour
         terrain.tilemap.SetTile(new Vector3Int(row, column, 0), terrain.tile);
     }
 
-    internal bool IsWalkableTile(Vector3Int cell)
+    internal bool IsWalkableTile(Vector3Int cell, bool requestFromEnemy)
     {
         foreach (var terrain in terrainList)
         {
-            if (terrain.isWalkable && terrain.tilemap.GetTile(cell) != null)
+            if (requestFromEnemy)
+            {
+                Debug.Log((char)terrain.type);
+                if (terrain.isWalkableByEnemy && terrain.tilemap.GetTile(cell) != null)
+                {
+                    return true;
+                }
+            }
+            else if (terrain.isWalkable && terrain.tilemap.GetTile(cell) != null)
             {
                 return true;
             }

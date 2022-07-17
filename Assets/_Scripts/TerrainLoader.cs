@@ -25,10 +25,17 @@ public class TerrainLoader : MonoBehaviour
 
                 if (words[j].Length > 1 && Enum.IsDefined(typeof(TerrainType), (int)words[j][1]))
                 {
-                    // TerrainType terrainType = (TerrainType)words[j][1];
-                    GameLogic.Instance.SpawnPlayer(new Vector3Int(j, -i, 0));
+                    if (words[j][1] == 'p')
+                    {
+                        GameLogic.Instance.SetPlayerPosition(new Vector3Int(j, -i, 0));
+                    }
+                    else if (words[j][1] == 'e')
+                    {
+                        GameLogic.Instance.SpawnEnemy(new Vector3Int(j, -i, 0));
+                    }
                 }
             }
         }
+        GameLogic.Instance.StartGame();
     }
 }

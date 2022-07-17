@@ -23,10 +23,15 @@ public class GridMovement : MonoBehaviour
     public Sprite spriteDown;
     public Sprite spriteRight;
 
+    public bool isEnemy;
+
     private void Awake()
     {
         grid = FindObjectOfType<Grid>();
         movementGrid = Instantiate(movementGridPrefab, grid.transform).GetComponent<MovementGrid>();
+
+        isEnemy = GetComponentInParent<Enemy>() != null;
+        movementGrid.isEnemy = isEnemy;
 
         up = 0.5f * new Vector2(grid.cellSize.x, grid.cellSize.y);
         down = -up;
@@ -41,7 +46,7 @@ public class GridMovement : MonoBehaviour
             isMakingStep = true;
             Vector2 newPosition = transform.position + (Vector3)direction;
             Vector3Int tileCell = grid.WorldToCell(newPosition);
-            if (movementGrid.IsWalkable(tileCell) && LevelManager.Instance.IsWalkableTile(tileCell))
+            if (movementGrid.IsWalkable(tileCell))
             {
                 StartCoroutine(StartMoving(direction));
             }
@@ -101,7 +106,6 @@ public class GridMovement : MonoBehaviour
         Vector2 originalPosition = GetGridCenterPosition(transform.position);
         Vector2 targetPosition = GetGridCenterPosition(transform.position + (Vector3)direction);
         float tryMoveTime = moveTime / 2f;
-        Debug.Log($"Try Move From {originalPosition} to {targetPosition}");
         while (elapsedTime < tryMoveTime)
         {
             transform.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime);
@@ -153,7 +157,7 @@ public class GridMovement : MonoBehaviour
 
     public void ShowMovementGrid(int radius)
     {
-        movementGrid.OnShowGrid(transform.position, radius);
+        movementGrid.OnShowGrid(transform.position, radius, isEnemy);
     }
 
 

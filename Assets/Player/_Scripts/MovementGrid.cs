@@ -26,12 +26,13 @@ public class MovementGrid : MonoBehaviour
 {
     public TileBase tile;
     private Tilemap tilemap;
+    public bool isEnemy;
     private void Awake()
     {
         tilemap = GetComponent<Tilemap>();
     }
 
-    public void OnShowGrid(Vector3 position, int radius)
+    public void OnShowGrid(Vector3 position, int radius, bool isEnemy)
     {
         tilemap.gameObject.SetActive(true);
         tilemap.ClearAllTiles();
@@ -49,19 +50,19 @@ public class MovementGrid : MonoBehaviour
                 Vector3Int pointUp = new Vector3Int(point.x, point.y + 1, point.z);
                 Vector3Int pointDown = new Vector3Int(point.x, point.y - 1, point.z);
 
-                if (LevelManager.Instance.IsWalkableTile(pointUp))
+                if (LevelManager.Instance.IsWalkableTile(pointUp, isEnemy))
                 {
                     pointSet.Add(pointUp);
                 }
-                if (LevelManager.Instance.IsWalkableTile(pointLeft))
+                if (LevelManager.Instance.IsWalkableTile(pointLeft, isEnemy))
                 {
                     pointSet.Add(pointLeft);
                 }
-                if (LevelManager.Instance.IsWalkableTile(pointDown))
+                if (LevelManager.Instance.IsWalkableTile(pointDown, isEnemy))
                 {
                     pointSet.Add(pointDown);
                 }
-                if (LevelManager.Instance.IsWalkableTile(pointRight))
+                if (LevelManager.Instance.IsWalkableTile(pointRight, isEnemy))
                 {
                     pointSet.Add(pointRight);
                 }
@@ -131,7 +132,7 @@ public class MovementGrid : MonoBehaviour
     private void LookAtNeighbourAt(Vector3Int direction, PathNode currentNode, List<PathNode> nodes, Vector3Int to)
     {
         Vector3Int neighbourAt = currentNode.position + direction;
-        if (!LevelManager.Instance.IsWalkableTile(neighbourAt))
+        if (!LevelManager.Instance.IsWalkableTile(neighbourAt, isEnemy))
         {
             return;
         }

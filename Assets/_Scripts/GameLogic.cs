@@ -9,7 +9,7 @@ public class GameLogic : MonoBehaviour
     private static GameLogic _instance;
     public static GameLogic Instance { get { return _instance; } }
     public Transform player;
-    // public GameObject playerPrefab;
+    public GameObject enemyPrefab;
     private bool isReloading;
 
     private void Awake()
@@ -17,9 +17,10 @@ public class GameLogic : MonoBehaviour
         _instance = this;
     }
 
-    public void SpawnPlayer(Vector3Int tilePosition)
+    public void SetPlayerPosition(Vector3Int tilePosition)
     {
         Vector3 pos = FindObjectOfType<Grid>().GetCellCenterWorld(tilePosition);
+        player.position = pos;
     }
 
     public void OnReloadScene()
@@ -31,7 +32,7 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    public void Start()
+    public void StartGame()
     {
         SwitchToPlayerRollDiceMode();
         enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
@@ -47,6 +48,12 @@ public class GameLogic : MonoBehaviour
     {
         FindObjectOfType<PlayerLink>().SwitchToMoveMode();
         UIManager.Instance.OnPlayerMove();
+    }
+
+    internal void SpawnEnemy(Vector3Int gridPosition)
+    {
+        var enemy = Instantiate(enemyPrefab, FindObjectOfType<Grid>().GetCellCenterWorld(gridPosition), Quaternion.identity).GetComponent<Enemy>();
+        enemies.Add(enemy);
     }
 
     #region Enemy
