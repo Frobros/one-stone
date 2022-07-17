@@ -1,20 +1,50 @@
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g g g g g g g g g g g g g g g g g
-g g gp g g g
-g g g g g g
-g g g g g g
-f f g f f f
-f f g f f f
-f f g f f f
-f f g f f f
-f f g g gp g
-f f g f f f
-f f g f f f
-f f g f f f
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g 0 0 0 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 g g 0 0 0 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 g g g g g g 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 g g g g g g 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 g g g g g g 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 g g g g g g 0 
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 g g g g g g 0
+g g g g g g g g g 0 0 0 g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 g g g g g g 0
+g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g 0
+g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g 0
+0 0 0 0 0 0 0 0 g 0 0 0 0 0 0 0 g g g g g g g g g g g g g g g g 0 0 0 0 0 g g g g g g 0
+0 0 0 0 0 0 0 0 g 0 0 0 0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g g g g g 0
+0 0 0 0 0 0 g g g g g g g g g 0 g g g g g g g g g g g g g g g g g g g g g g g g g g g 0
+g g g g g g g g g g g g g g g 0 g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 g g g g g g g g g 0 g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 g g g g g g g g g 0 g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+g g g g g 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g g g g g g g g g g g g g g g 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0 g g g g g g g g g 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 g g 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 b b b b b b b b b b 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 b b b b b b b b b b 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 b b b b b b b b b b 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
