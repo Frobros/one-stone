@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/_Scripts/PlayerController.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Player/_Scripts/PlayerController.inputactions'
 
 using System;
 using System.Collections;
@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class @PlayerController : IInputActionCollection, IDisposable
+public class @PlayerControls : IInputActionCollection, IDisposable
 {
     public InputActionAsset asset { get; }
-    public @PlayerController()
+    public @PlayerControls()
     {
         asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerController"",
@@ -45,7 +45,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": ""WASD"",
+                    ""name"": ""Arrows"",
                     ""id"": ""8d9bc5dc-3c45-47eb-84d2-ea35ca596feb"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -100,6 +100,61 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""WASD"",
+                    ""id"": ""0bfdb08d-119e-470e-8b80-73a2d544817b"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""99c2af8d-b994-4508-b8a6-404b9e00fe48"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""6caa7dc3-c2ac-485d-a87f-cfb4b6a4fa2d"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""331b59db-0e50-460a-8c57-494f73dd4d50"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""57cea9dd-7ecd-486e-b73f-f7a22dc95640"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""a38049eb-d162-41cb-8877-a6fa783545cb"",
                     ""path"": ""<Keyboard>/space"",
@@ -128,7 +183,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
             ""id"": ""2260d739-a582-4f71-9903-7506858b6a79"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Action"",
                     ""type"": ""Button"",
                     ""id"": ""65d5b56c-195b-4cfc-80eb-c0ffdd3fd269"",
                     ""expectedControlType"": ""Button"",
@@ -140,11 +195,11 @@ public class @PlayerController : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""19d8f3da-6433-405b-b847-b9aad15244e6"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -187,7 +242,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
         m_Move_Reload = m_Move.FindAction("Reload", throwIfNotFound: true);
         // ThrowDice
         m_ThrowDice = asset.FindActionMap("ThrowDice", throwIfNotFound: true);
-        m_ThrowDice_Newaction = m_ThrowDice.FindAction("New action", throwIfNotFound: true);
+        m_ThrowDice_Action = m_ThrowDice.FindAction("Action", throwIfNotFound: true);
         // EnemyEncounter
         m_EnemyEncounter = asset.FindActionMap("EnemyEncounter", throwIfNotFound: true);
         m_EnemyEncounter_Newaction = m_EnemyEncounter.FindAction("New action", throwIfNotFound: true);
@@ -245,8 +300,8 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_Move_Reload;
     public struct MoveActions
     {
-        private @PlayerController m_Wrapper;
-        public MoveActions(@PlayerController wrapper) { m_Wrapper = wrapper; }
+        private @PlayerControls m_Wrapper;
+        public MoveActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Move_Move;
         public InputAction @Action => m_Wrapper.m_Move_Action;
         public InputAction @Reload => m_Wrapper.m_Move_Reload;
@@ -289,12 +344,12 @@ public class @PlayerController : IInputActionCollection, IDisposable
     // ThrowDice
     private readonly InputActionMap m_ThrowDice;
     private IThrowDiceActions m_ThrowDiceActionsCallbackInterface;
-    private readonly InputAction m_ThrowDice_Newaction;
+    private readonly InputAction m_ThrowDice_Action;
     public struct ThrowDiceActions
     {
-        private @PlayerController m_Wrapper;
-        public ThrowDiceActions(@PlayerController wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_ThrowDice_Newaction;
+        private @PlayerControls m_Wrapper;
+        public ThrowDiceActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Action => m_Wrapper.m_ThrowDice_Action;
         public InputActionMap Get() { return m_Wrapper.m_ThrowDice; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -304,16 +359,16 @@ public class @PlayerController : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_ThrowDiceActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnNewaction;
+                @Action.started -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnAction;
+                @Action.performed -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnAction;
+                @Action.canceled -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnAction;
             }
             m_Wrapper.m_ThrowDiceActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @Action.started += instance.OnAction;
+                @Action.performed += instance.OnAction;
+                @Action.canceled += instance.OnAction;
             }
         }
     }
@@ -325,8 +380,8 @@ public class @PlayerController : IInputActionCollection, IDisposable
     private readonly InputAction m_EnemyEncounter_Newaction;
     public struct EnemyEncounterActions
     {
-        private @PlayerController m_Wrapper;
-        public EnemyEncounterActions(@PlayerController wrapper) { m_Wrapper = wrapper; }
+        private @PlayerControls m_Wrapper;
+        public EnemyEncounterActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Newaction => m_Wrapper.m_EnemyEncounter_Newaction;
         public InputActionMap Get() { return m_Wrapper.m_EnemyEncounter; }
         public void Enable() { Get().Enable(); }
@@ -359,7 +414,7 @@ public class @PlayerController : IInputActionCollection, IDisposable
     }
     public interface IThrowDiceActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnAction(InputAction.CallbackContext context);
     }
     public interface IEnemyEncounterActions
     {
