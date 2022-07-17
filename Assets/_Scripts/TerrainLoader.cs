@@ -13,7 +13,6 @@ public class TerrainLoader : MonoBehaviour
         var allLines = content.Split('\n');
         for (int i = 0; i < allLines.Length; i++)
         {
-            int y = 0;
             var words = allLines[i].Split(' ');
             for (int j = 0; j < words.Length; j++)
             {
@@ -21,14 +20,13 @@ public class TerrainLoader : MonoBehaviour
                 if (Enum.IsDefined(typeof(TerrainType), c))
                 {
                     TerrainType terrainType = (TerrainType)(c);
-                    FindObjectOfType<LevelManager>().SetTile(terrainType, y, -i);
-                    y++;
+                    FindObjectOfType<LevelManager>().SetTile(terrainType, j, -i);
                 }
 
                 if (words[j].Length > 1 && Enum.IsDefined(typeof(TerrainType), (int)words[j][1]))
                 {
-                    TerrainType terrainType = (TerrainType)words[j][1];
-                    GameLogic.Instance.SpawnPlayer(new Vector3Int(y, -i, 0));
+                    // TerrainType terrainType = (TerrainType)words[j][1];
+                    GameLogic.Instance.SpawnPlayer(new Vector3Int(j, -i, 0));
                 }
             }
         }

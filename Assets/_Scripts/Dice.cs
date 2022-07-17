@@ -19,21 +19,53 @@ Section "Versus System.Random"
 
 */
 
+using System.Collections;
 using RNG = System.Random;
-
+using UnityEngine;
+using TMPro;
 
 public class Dice : MonoBehaviour
 {
-	RNG rng;
-
-	void Awake()
+	private RNG rng;
+    private bool isRolling;
+	public bool IsRolling { get { return isRolling; } }
+	private void Awake()
 	{
-		rng = new Random();
+		rng = new RNG();
 	}
 
-	int roll()
-	{
-		return rng.Next(1,7); // creates a number between 1 and 6
-	}
+    #region Dice Value
+    [SerializeField] private float rollTime;
+	private int diceValue;
+	public int DiceValue { get { return diceValue; } }
 
+
+	public void OnRollDice()
+    {
+		if (!isRolling)
+        {
+			isRolling = true;
+			StartCoroutine(StartRollDice());
+        }
+    }
+
+	private IEnumerator StartRollDice()
+    {
+		float elapsedTime = 0;
+		float switchTime = 0;
+		float switchTimeIncrement = 0;
+		while (elapsedTime <= rollTime)
+        {
+			if (elapsedTime >= switchTime)
+            {
+				switchTime += switchTimeIncrement;
+				switchTimeIncrement = Mathf.Lerp(0f, 0.05f * rollTime, elapsedTime/rollTime);
+				diceValue = rng.Next(1, 7);
+            }
+			elapsedTime += Time.deltaTime;
+			yield return null;
+        }
+		isRolling = false;
+	}
+    #endregion
 }

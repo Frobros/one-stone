@@ -1,5 +1,10 @@
-w w w w w m m f m m
-g g f g g g g f g g
-g fp f w g g w f g g
-f g f w w w w w g w
-f g f w w w w w g w
+fp f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f
+f f f f f f f f f f

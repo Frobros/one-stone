@@ -20,6 +20,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "99ed26f3-3399-42c3-bcd0-dc01872eda2c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -88,6 +96,17 @@
                     "action": "Action",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eb5e5061-ddce-4b58-93a6-201bd56b6073",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -96,7 +115,7 @@
             "id": "2260d739-a582-4f71-9903-7506858b6a79",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Action",
                     "type": "Button",
                     "id": "65d5b56c-195b-4cfc-80eb-c0ffdd3fd269",
                     "expectedControlType": "Button",
@@ -108,11 +127,11 @@
                 {
                     "name": "",
                     "id": "19d8f3da-6433-405b-b847-b9aad15244e6",
-                    "path": "",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

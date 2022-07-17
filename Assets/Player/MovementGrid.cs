@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using System;
 
 public class MovementGrid : MonoBehaviour
 {
@@ -42,5 +43,10 @@ public class MovementGrid : MonoBehaviour
     public Vector3 GetGridCenterPosition(Vector3Int position)
     {
         return tilemap.CellToWorld(position) + 0.5f * tilemap.cellSize;
+    }
+
+    internal bool IsWalkable(Vector3Int tileCell)
+    {
+        return tilemap.GetTile(tileCell) != null;
     }
 }

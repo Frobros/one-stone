@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1022033371748000701
+--- !u!1 &1022033372372489522
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,36 +91,54 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1022033371748000700}
-  - component: {fileID: 1022033371748000703}
+  - component: {fileID: 1022033372372489532}
+  - component: {fileID: 4605368625561628739}
+  - component: {fileID: 970183401038960453}
   m_Layer: 0
-  m_Name: PlayerInput
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1022033371748000700
+--- !u!4 &1022033372372489532
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022033371748000701}
+  m_GameObject: {fileID: 1022033372372489522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1022033372372489532}
-  m_RootOrder: 1
+  m_Children:
+  - {fileID: 1022033370557515925}
+  - {fileID: 8484142481713894351}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1022033371748000703
+--- !u!114 &4605368625561628739
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022033371748000701}
+  m_GameObject: {fileID: 1022033372372489522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea2145756d606c4b91bcb82b8057964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveTime: 0.1
+  radius: 5
+  isMoving: 0
+--- !u!114 &970183401038960453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022033372372489522}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
@@ -141,8 +159,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1022033372372489533}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 4605368625561628739}
+        m_TargetAssemblyTypeName: PlayerLink, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:
@@ -157,8 +175,8 @@ MonoBehaviour:
     m_ActionName: Move/Move[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1022033372372489533}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 4605368625561628739}
+        m_TargetAssemblyTypeName: PlayerLink, Assembly-CSharp
         m_MethodName: OnAction
         m_Mode: 1
         m_Arguments:
@@ -172,19 +190,47 @@ MonoBehaviour:
     m_ActionId: f9c86598-48d1-4675-bf24-2a6191ccf5cc
     m_ActionName: Move/Action[/Keyboard/space]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4605368625561628739}
+        m_TargetAssemblyTypeName: PlayerLink, Assembly-CSharp
+        m_MethodName: OnRollDice
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 65d5b56c-195b-4cfc-80eb-c0ffdd3fd269
     m_ActionName: ThrowDice/New action
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 81a52657-59c9-4909-8bef-9170141e0a9c
     m_ActionName: EnemyEncounter/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4605368625561628739}
+        m_TargetAssemblyTypeName: PlayerLink, Assembly-CSharp
+        m_MethodName: OnReload
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 99ed26f3-3399-42c3-bcd0-dc01872eda2c
+    m_ActionName: Move/Reload[/Keyboard/r]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Move
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!1 &1022033372372489522
+--- !u!1 &6922899742282583833
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -192,43 +238,39 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1022033372372489532}
-  - component: {fileID: 1022033372372489533}
+  - component: {fileID: 8484142481713894351}
+  - component: {fileID: 2780192814449194030}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Dice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1022033372372489532
+--- !u!4 &8484142481713894351
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022033372372489522}
+  m_GameObject: {fileID: 6922899742282583833}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1022033370557515925}
-  - {fileID: 1022033371748000700}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_Children: []
+  m_Father: {fileID: 1022033372372489532}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1022033372372489533
+--- !u!114 &2780192814449194030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022033372372489522}
+  m_GameObject: {fileID: 6922899742282583833}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f3400d5fb924af4ba399dc7dec463cf, type: 3}
+  m_Script: {fileID: 11500000, guid: c914f22ca8575a043a286d4ebff4788a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.5
-  radius: 5
-  isMoving: 0
+  rollTime: 1
