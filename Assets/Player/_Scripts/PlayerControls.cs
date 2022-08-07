@@ -231,6 +231,44 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Title"",
+            ""id"": ""b5e7931a-077f-40c1-a8ce-66ab9142d98f"",
+            ""actions"": [
+                {
+                    ""name"": ""StartGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""6760e68a-267c-41ab-978b-bd4ce539d53a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4afd8c51-b8b9-49c7-956c-2884956cec58"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b4a72086-39d7-4aff-b5b4-4441c80a1b33"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -246,6 +284,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         // EnemyEncounter
         m_EnemyEncounter = asset.FindActionMap("EnemyEncounter", throwIfNotFound: true);
         m_EnemyEncounter_Newaction = m_EnemyEncounter.FindAction("New action", throwIfNotFound: true);
+        // Title
+        m_Title = asset.FindActionMap("Title", throwIfNotFound: true);
+        m_Title_StartGame = m_Title.FindAction("StartGame", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -406,6 +447,39 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public EnemyEncounterActions @EnemyEncounter => new EnemyEncounterActions(this);
+
+    // Title
+    private readonly InputActionMap m_Title;
+    private ITitleActions m_TitleActionsCallbackInterface;
+    private readonly InputAction m_Title_StartGame;
+    public struct TitleActions
+    {
+        private @PlayerControls m_Wrapper;
+        public TitleActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @StartGame => m_Wrapper.m_Title_StartGame;
+        public InputActionMap Get() { return m_Wrapper.m_Title; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TitleActions set) { return set.Get(); }
+        public void SetCallbacks(ITitleActions instance)
+        {
+            if (m_Wrapper.m_TitleActionsCallbackInterface != null)
+            {
+                @StartGame.started -= m_Wrapper.m_TitleActionsCallbackInterface.OnStartGame;
+                @StartGame.performed -= m_Wrapper.m_TitleActionsCallbackInterface.OnStartGame;
+                @StartGame.canceled -= m_Wrapper.m_TitleActionsCallbackInterface.OnStartGame;
+            }
+            m_Wrapper.m_TitleActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @StartGame.started += instance.OnStartGame;
+                @StartGame.performed += instance.OnStartGame;
+                @StartGame.canceled += instance.OnStartGame;
+            }
+        }
+    }
+    public TitleActions @Title => new TitleActions(this);
     public interface IMoveActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -419,5 +493,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface IEnemyEncounterActions
     {
         void OnNewaction(InputAction.CallbackContext context);
+    }
+    public interface ITitleActions
+    {
+        void OnStartGame(InputAction.CallbackContext context);
     }
 }

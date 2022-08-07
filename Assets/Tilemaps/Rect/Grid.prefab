@@ -158,7 +158,6 @@ GameObject:
   - component: {fileID: 8868470295945481105}
   - component: {fileID: 8868470295945481104}
   - component: {fileID: 8868470295945480814}
-  - component: {fileID: 8868470295945480815}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -212,19 +211,19 @@ MonoBehaviour:
     representingChar: 102
     layerMask:
       serializedVersion: 2
-      m_Bits: 16
+      m_Bits: 64
     tilemap: {fileID: 8868470295700996872}
     tile: {fileID: 11400000, guid: 11875cc3ba6e35c44a80893e65031a46, type: 2}
-    isWalkable: 1
---- !u!114 &8868470295945480815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8868470295945481107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6f51250ff16d6f44ba1724407638894, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    isWalkableByPlayer: 1
+    isWalkableByEnemy: 1
+  - name: Base
+    id: 1
+    type: 98
+    representingChar: 98
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 128
+    tilemap: {fileID: 8868470295700996872}
+    tile: {fileID: 11400000, guid: 04549d2dc70ea584197eac449a3aa0b1, type: 2}
+    isWalkableByPlayer: 1
+    isWalkableByEnemy: 0

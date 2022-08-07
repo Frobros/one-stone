@@ -28,14 +28,15 @@ public class PlayerLink : MonoBehaviour
     {
         gridMovement = GetComponent<GridMovement>();
         transform.position = gridMovement.GetGridCenterPosition(transform.position);
-        Camera.main.transform.parent = transform;
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
 
+        UIManager.Instance.SetPlayerDice(dice);
+    }
 
+    internal void Initialize()
+    {
         playerInput = GetComponent<PlayerInput>();
         movementActionMap = playerInput.actions.FindActionMap("Move");
         rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
-        UIManager.Instance.SetPlayerDice(dice);
     }
 
     private void Update()
@@ -123,7 +124,7 @@ public class PlayerLink : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("YOUR LOST!");
+        Debug.Log("UR LOST!");
         if (other.CompareTag("Enemy"))
         {
             OnReload();

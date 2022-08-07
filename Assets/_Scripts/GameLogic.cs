@@ -8,7 +8,8 @@ public class GameLogic : MonoBehaviour
 {
     private static GameLogic _instance;
     public static GameLogic Instance { get { return _instance; } }
-    public Transform player;
+    public PlayerLink player;
+    public FollowTarget cam;
     public GameObject enemyPrefab;
     private bool isReloading;
 
@@ -20,7 +21,7 @@ public class GameLogic : MonoBehaviour
     public void SetPlayerPosition(Vector3Int tilePosition)
     {
         Vector3 pos = FindObjectOfType<Grid>().GetCellCenterWorld(tilePosition);
-        player.position = pos;
+        player.transform.position = pos;
     }
 
     public void OnReloadScene()
@@ -34,29 +35,31 @@ public class GameLogic : MonoBehaviour
 
     public void StartGame()
     {
-        SwitchToPlayerRollDiceMode();
+        player.Initialize();
         enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
+        SwitchToPlayerRollDiceMode();
     }
 
     public void SwitchToPlayerRollDiceMode()
     {
-        FindObjectOfType<PlayerLink>().SwitchToRollDiceMode();
+        player.SwitchToRollDiceMode();
+        cam.Target = player.transform;
         UIManager.Instance.OnWaitForPlayerDiceRoll();
     }
 
     public void SwitchToPlayerMoveMode()
     {
-        FindObjectOfType<PlayerLink>().SwitchToMoveMode();
+        player.SwitchToMoveMode();
         UIManager.Instance.OnPlayerMove();
     }
 
+    #region Enemy
     internal void SpawnEnemy(Vector3Int gridPosition)
     {
         var enemy = Instantiate(enemyPrefab, FindObjectOfType<Grid>().GetCellCenterWorld(gridPosition), Quaternion.identity).GetComponent<Enemy>();
         enemies.Add(enemy);
     }
 
-    #region Enemy
     public List<Enemy> enemies = new List<Enemy>();
     public int currentEnemy = 0;
 
@@ -64,6 +67,7 @@ public class GameLogic : MonoBehaviour
     {
         currentEnemy = 0;
         UIManager.Instance.OnWaitForEnemyDiceRoll(enemies[currentEnemy]);
+        cam.Target = enemies[currentEnemy].transform;
     }
 
     public void NextEnemyRollDice()
@@ -75,6 +79,8 @@ public class GameLogic : MonoBehaviour
             SwitchToPlayerRollDiceMode();
             return;
         }
+
+        cam.Target = enemies[currentEnemy].transform;
         UIManager.Instance.OnWaitForEnemyDiceRoll(enemies[currentEnemy]);
     }
 
