@@ -61,6 +61,11 @@ public class UIManager : MonoBehaviour
         enemy.OnRollDice();
     }
 
+    internal void OnPlayerMoveFreely()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void OnEnemyRollDice() {}
 
     public void OnEnemyMove() {}

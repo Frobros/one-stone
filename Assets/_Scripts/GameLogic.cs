@@ -37,7 +37,14 @@ public class GameLogic : MonoBehaviour
     {
         player.Initialize();
         enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
-        SwitchToPlayerRollDiceMode();
+        SwitchToPlayerMoveFreelyMode();
+    }
+
+    private void SwitchToPlayerMoveFreelyMode()
+    {
+        player.SwitchToMoveFreelyMode();
+        cam.Target = player.transform;
+        UIManager.Instance.OnPlayerMoveFreely();
     }
 
     public void SwitchToPlayerRollDiceMode()

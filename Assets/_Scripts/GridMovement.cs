@@ -39,14 +39,15 @@ public class GridMovement : MonoBehaviour
         right = -left;
     }
 
-    public void StartMovingRoutine(Vector2 direction)
+    public void StartMovingRoutine(Vector2 direction, bool isMovingFreely)
     {
         if (!isMakingStep)
         {
             isMakingStep = true;
             Vector2 newPosition = transform.position + (Vector3)direction;
             Vector3Int tileCell = grid.WorldToCell(newPosition);
-            if (movementGrid.IsWalkable(tileCell))
+            bool isTileCellWalkable = isMovingFreely && LevelManager.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
+            if (isTileCellWalkable)
             {
                 StartCoroutine(StartMoving(direction));
             }
@@ -67,7 +68,7 @@ public class GridMovement : MonoBehaviour
             yield return new WaitUntil(() => !isMakingStep);
             Vector2 currentPosition = transform.position;
             Vector2 nextPosition = grid.GetCellCenterWorld(movements[i]);
-            StartMovingRoutine(nextPosition - currentPosition);
+            StartMovingRoutine(nextPosition - currentPosition, false);
             i++;
         }
         isMoving = false;
@@ -166,23 +167,23 @@ public class GridMovement : MonoBehaviour
         movementGrid.HideGrid();
     }
 
-    public void MoveUp()
+    public void MoveUp(bool isMovingFreely)
     {
-        StartMovingRoutine(up);
+        StartMovingRoutine(up, isMovingFreely);
     }
 
-    public void MoveDown()
+    public void MoveDown(bool isMovingFreely)
     {
-        StartMovingRoutine(down);
+        StartMovingRoutine(down, isMovingFreely);
     }
 
-    public void MoveRight()
+    public void MoveRight(bool isMovingFreely)
     {
-        StartMovingRoutine(right);
+        StartMovingRoutine(right, isMovingFreely);
     }
 
-    public void MoveLeft()
+    public void MoveLeft(bool isMovingFreely)
     {
-        StartMovingRoutine(left);
+        StartMovingRoutine(left, isMovingFreely);
     }
 }

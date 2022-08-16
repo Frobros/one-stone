@@ -8,6 +8,7 @@ using UnityEngine.Tilemaps;
 public enum InputMode
 {
     MOVE,
+    MOVE_FREELY,
     ROLL_DICE,
     DISABLED,
     ENEMY_MOVE
@@ -52,6 +53,16 @@ public class PlayerLink : MonoBehaviour
         }
     }
 
+    internal void SwitchToMoveFreelyMode()
+    {
+        if (mode != InputMode.MOVE_FREELY)
+        {
+            mode = InputMode.MOVE_FREELY;
+            movementActionMap.Enable();
+            rollingDiceActionMap.Disable();
+        }
+    }
+
     public void SwitchToMoveMode()
     {
         if (mode != InputMode.MOVE)
@@ -59,7 +70,6 @@ public class PlayerLink : MonoBehaviour
             mode = InputMode.MOVE;
             movementActionMap.Enable();
             rollingDiceActionMap.Disable();
-
         }
     }
 
@@ -91,9 +101,17 @@ public class PlayerLink : MonoBehaviour
     }
     public void OnPlace()
     {
-        gridMovement.SetMovementGridActive(false);
-        DisableControls();
-        GameLogic.Instance.SwitchToEnemyRollDiceMode();
+        if (mode == InputMode.MOVE)
+        {
+            gridMovement.SetMovementGridActive(false);
+            DisableControls();
+            GameLogic.Instance.SwitchToEnemyRollDiceMode();
+        }
+        else if (mode == InputMode.MOVE_FREELY)
+        {
+            gridMovement.SetMovementGridActive(false);
+            GameLogic.Instance.SwitchToPlayerRollDiceMode();
+        }
     }
 
     public void OnReload()
@@ -106,19 +124,19 @@ public class PlayerLink : MonoBehaviour
         Vector2 direction = directionValue.ReadValue<Vector2>();
         if (direction.x < 0)
         {
-            gridMovement.MoveLeft();
+            gridMovement.MoveLeft(mode == InputMode.MOVE_FREELY);
         }
         else if (direction.x > 0)
         {
-            gridMovement.MoveRight();
+            gridMovement.MoveRight(mode == InputMode.MOVE_FREELY);
         }
         else if (direction.y < 0)
         {
-            gridMovement.MoveDown();
+            gridMovement.MoveDown(mode == InputMode.MOVE_FREELY);
         }
         else if (direction.y > 0)
         {
-            gridMovement.MoveUp();
+            gridMovement.MoveUp(mode == InputMode.MOVE_FREELY);
         }
     }
 
