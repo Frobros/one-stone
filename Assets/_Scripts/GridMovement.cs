@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RNG = System.Random;
 
 public class GridMovement : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class GridMovement : MonoBehaviour
     public Sprite spriteRight;
 
     public bool isEnemy;
+    private RNG rng;
 
     private void Awake()
     {
@@ -37,6 +39,8 @@ public class GridMovement : MonoBehaviour
         down = -up;
         left = 0.5f * new Vector2(-grid.cellSize.x, grid.cellSize.y);
         right = -left;
+
+        rng = new RNG();
     }
 
     public void StartMovingRoutine(Vector2 direction, bool isMovingFreely)
@@ -57,6 +61,41 @@ public class GridMovement : MonoBehaviour
             }
         }
     }
+
+    public void StartMovingRandomly()
+    {
+        if (!isMakingStep)
+        {
+            Debug.Log($"{transform.name} is moving!");
+            isMakingStep = true;
+            List<Vector3Int> positions = new List<Vector3Int>();
+            Vector3Int pos = grid.WorldToCell((Vector2)transform.position + up);
+            if (LevelManager.Instance.IsWalkableTile(pos, true))
+            {
+                positions.Add(pos);
+            }
+            pos = grid.WorldToCell((Vector2)transform.position + down);
+            if (LevelManager.Instance.IsWalkableTile(pos, true))
+            {
+                positions.Add(pos);
+            }
+            pos = grid.WorldToCell((Vector2)transform.position + left);
+            if (LevelManager.Instance.IsWalkableTile(pos, true))
+            {
+                positions.Add(pos);
+            }
+            pos = grid.WorldToCell((Vector2)transform.position + right);
+            if (LevelManager.Instance.IsWalkableTile(pos, true))
+            {
+                positions.Add(pos);
+            }
+
+            Vector3Int tileCell = positions[rng.Next(0, positions.Count)];
+            Vector2 direction = grid.CellToWorld(tileCell) - transform.position;
+            StartCoroutine(StartMoving(direction));
+        }
+    }
+
     internal IEnumerator StartMovingToPlayer()
     {
         List<Vector3Int> movements = GetMovementStepsToPlayer();

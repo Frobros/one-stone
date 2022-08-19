@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private GridMovement movement;
     public Dice dice;
-    public GridMovement gridMovement;
     public bool isDiceDoneRolling = true;
     public bool isMoving = false;
     public bool isDoneWithTurn = true;
+
+    private void Awake()
+    {
+        movement = GetComponent<GridMovement>();
+    }
 
     private void Update()
     {
@@ -19,18 +24,17 @@ public class Enemy : MonoBehaviour
 
             if (isDiceDoneRolling)
             {
-                gridMovement.ShowMovementGrid(dice.DiceValue);
+                movement.ShowMovementGrid(dice.DiceValue);
                 GameLogic.Instance.SwitchToEnemyMoveMode();
             }
         }
 
-
         if (!isDoneWithTurn)
         {
-            isDoneWithTurn = !gridMovement.isMoving;
+            isDoneWithTurn = !movement.isMoving;
             if (isDoneWithTurn)
             {
-                gridMovement.HideMovementGrid();
+                movement.HideMovementGrid();
                 GameLogic.Instance.NextEnemyRollDice();
             }
         }
@@ -46,8 +50,13 @@ public class Enemy : MonoBehaviour
 
     internal void InitEnemyMovement()
     {
-        gridMovement.isMoving = true;
+        movement.isMoving = true;
         isDoneWithTurn = false;
-        StartCoroutine(gridMovement.StartMovingToPlayer());
+        StartCoroutine(movement.StartMovingToPlayer());
+    }
+
+    internal void InitRandomEnemyMove()
+    {
+        movement.StartMovingRandomly();
     }
 }

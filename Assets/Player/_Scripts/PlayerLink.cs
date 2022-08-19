@@ -17,7 +17,7 @@ public enum InputMode
 public class PlayerLink : MonoBehaviour
 {
     public Dice dice;
-    private GridMovement gridMovement;
+    private GridMovement movement;
 
     private PlayerInput playerInput;
     private InputActionMap movementActionMap;
@@ -27,8 +27,8 @@ public class PlayerLink : MonoBehaviour
 
     private void Start()
     {
-        gridMovement = GetComponent<GridMovement>();
-        transform.position = gridMovement.GetGridCenterPosition(transform.position);
+        movement = GetComponent<GridMovement>();
+        transform.position = movement.GetGridCenterPosition(transform.position);
 
         UIManager.Instance.SetPlayerDice(dice);
     }
@@ -47,7 +47,7 @@ public class PlayerLink : MonoBehaviour
             isDiceDoneRolling = !dice.IsRolling;
             if (isDiceDoneRolling)
             {
-                gridMovement.ShowMovementGrid(dice.DiceValue);
+                movement.ShowMovementGrid(dice.DiceValue);
                 GameLogic.Instance.SwitchToPlayerMoveMode();
             }
         }
@@ -103,13 +103,13 @@ public class PlayerLink : MonoBehaviour
     {
         if (mode == InputMode.MOVE)
         {
-            gridMovement.SetMovementGridActive(false);
+            movement.SetMovementGridActive(false);
             DisableControls();
             GameLogic.Instance.SwitchToEnemyRollDiceMode();
         }
         else if (mode == InputMode.MOVE_FREELY)
         {
-            gridMovement.SetMovementGridActive(false);
+            movement.SetMovementGridActive(false);
             GameLogic.Instance.SwitchToPlayerRollDiceMode();
         }
     }
@@ -122,21 +122,31 @@ public class PlayerLink : MonoBehaviour
     public void OnMove(InputAction.CallbackContext directionValue)
     {
         Vector2 direction = directionValue.ReadValue<Vector2>();
-        if (direction.x < 0)
+        Debug.Log(direction);
+        if (direction != Vector2.zero)
         {
-            gridMovement.MoveLeft(mode == InputMode.MOVE_FREELY);
-        }
-        else if (direction.x > 0)
-        {
-            gridMovement.MoveRight(mode == InputMode.MOVE_FREELY);
-        }
-        else if (direction.y < 0)
-        {
-            gridMovement.MoveDown(mode == InputMode.MOVE_FREELY);
-        }
-        else if (direction.y > 0)
-        {
-            gridMovement.MoveUp(mode == InputMode.MOVE_FREELY);
+            bool isMovingFreely = mode == InputMode.MOVE_FREELY;
+            if (isMovingFreely && !movement.isMakingStep)
+            {
+                GameLogic.Instance.PlayerMakingFreeMove();
+            }
+
+            if (direction.x < 0)
+            {
+                movement.MoveLeft(isMovingFreely);
+            }
+            else if (direction.x > 0)
+            {
+                movement.MoveRight(isMovingFreely);
+            }
+            else if (direction.y < 0)
+            {
+                movement.MoveDown(isMovingFreely);
+            }
+            else if (direction.y > 0)
+            {
+                movement.MoveUp(isMovingFreely);
+            }
         }
     }
 

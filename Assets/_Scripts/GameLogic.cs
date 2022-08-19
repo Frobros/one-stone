@@ -67,6 +67,14 @@ public class GameLogic : MonoBehaviour
         enemies.Add(enemy);
     }
 
+    internal void PlayerMakingFreeMove()
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.InitRandomEnemyMove();
+        }
+    }
+
     public List<Enemy> enemies = new List<Enemy>();
     public int currentEnemy = 0;
 
