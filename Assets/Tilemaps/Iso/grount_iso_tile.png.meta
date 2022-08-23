@@ -17,6 +17,12 @@ TextureImporter:
   - first:
       213: -1077338579629565118
     second: grount_iso_tile (3)_4
+  - first:
+      213: 5779276551972103038
+    second: grount_iso_tile_0
+  - first:
+      213: 3190613614195571899
+    second: grount_iso_tile_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -218,6 +224,48 @@ TextureImporter:
       bones: []
       spriteID: 24b1b5215468c01f0800000000000000
       internalID: -1077338579629565118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grount_iso_tile_0
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e73aa03776d143050800000000000000
+      internalID: 5779276551972103038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: grount_iso_tile_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbcf6a17d26574c20800000000000000
+      internalID: 3190613614195571899
       vertices: []
       indices: 
       edges: []

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -98,7 +97,14 @@ public class GridMovement : MonoBehaviour
 
     internal IEnumerator StartMovingToPlayer()
     {
-        List<Vector3Int> movements = GetMovementStepsToPlayer();
+        Vector3 from = transform.position;
+        Vector3 to = FindObjectOfType<PlayerLink>().transform.position;
+        PathFinding.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
+
+        yield return new WaitUntil(() => !PathFinding.Instance.isCalculating);
+
+        List<Vector3Int> movements = PathFinding.Instance.positions;
+
         int i = 0;
         bool canReachTile = true;
         while (i < movements.Count && canReachTile)
@@ -118,10 +124,6 @@ public class GridMovement : MonoBehaviour
         return movementGrid.IsWalkable(position);
     }
 
-    internal List<Vector3Int> GetMovementStepsToPlayer()
-    {
-        return movementGrid.GetMovementStepsToPlayer(transform.position);
-    }
 
     private IEnumerator StartMoving(Vector2 direction)
     {

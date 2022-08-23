@@ -122,7 +122,6 @@ public class PlayerLink : MonoBehaviour
     public void OnMove(InputAction.CallbackContext directionValue)
     {
         Vector2 direction = directionValue.ReadValue<Vector2>();
-        Debug.Log(direction);
         if (direction != Vector2.zero)
         {
             bool isMovingFreely = mode == InputMode.MOVE_FREELY;
@@ -152,7 +151,6 @@ public class PlayerLink : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("UR LOST!");
         if (other.CompareTag("Enemy"))
         {
             OnReload();

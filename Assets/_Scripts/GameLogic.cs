@@ -42,15 +42,15 @@ public class GameLogic : MonoBehaviour
 
     private void SwitchToPlayerMoveFreelyMode()
     {
-        player.SwitchToMoveFreelyMode();
         cam.Target = player.transform;
+        player.SwitchToMoveFreelyMode();
         UIManager.Instance.OnPlayerMoveFreely();
     }
 
     public void SwitchToPlayerRollDiceMode()
     {
-        player.SwitchToRollDiceMode();
         cam.Target = player.transform;
+        player.SwitchToRollDiceMode();
         UIManager.Instance.OnWaitForPlayerDiceRoll();
     }
 
@@ -81,8 +81,8 @@ public class GameLogic : MonoBehaviour
     public void SwitchToEnemyRollDiceMode()
     {
         currentEnemy = 0;
-        UIManager.Instance.OnWaitForEnemyDiceRoll(enemies[currentEnemy]);
         cam.Target = enemies[currentEnemy].transform;
+        UIManager.Instance.OnEnemyRollDice(enemies[currentEnemy]);
     }
 
     public void NextEnemyRollDice()
@@ -96,12 +96,11 @@ public class GameLogic : MonoBehaviour
         }
 
         cam.Target = enemies[currentEnemy].transform;
-        UIManager.Instance.OnWaitForEnemyDiceRoll(enemies[currentEnemy]);
+        UIManager.Instance.OnEnemyRollDice(enemies[currentEnemy]);
     }
 
     public void SwitchToEnemyMoveMode()
     {
-        UIManager.Instance.OnEnemyMove();
         enemies[currentEnemy].InitEnemyMovement();
     }
     #endregion

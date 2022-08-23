@@ -33,6 +33,10 @@ public class LevelManager : MonoBehaviour
     private static LevelManager _instance;
     public static LevelManager Instance { get { return _instance; } }
     public List<Terrain> terrainList;
+    public Tilemap pathFindingTilemap;
+    public TileBase pathfindingTileCurrent;
+    public TileBase pathfindingTileOld;
+    public Vector3Int oldPosition;
 
     private void Awake()
     {
@@ -77,10 +81,48 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    internal void PaintNode(Vector3Int position)
+    {
+        pathFindingTilemap.SetTile(position, pathfindingTileCurrent);
+        oldPosition = position;
+    }
+
+    internal void PaintPath(PathNode node)
+    {
+        pathFindingTilemap.CompressBounds();
+        Debug.Log("Start Painting");
+        BoundsInt bounds = pathFindingTilemap.cellBounds;
+        TileBase[] allTiles = pathFindingTilemap.GetTilesBlock(bounds);
+
+        for (int x = 0; x < bounds.size.x; x++)
+        {
+            for (int y = 0; y < bounds.size.y; y++)
+            {
+                TileBase tile = allTiles[x + y * bounds.size.x];
+                if (tile != null)
+                {
+                    Vector3Int tilePosition = new Vector3Int(bounds.min.x + x, bounds.min.y + y, 0);
+                    pathFindingTilemap.SetTile(tilePosition, pathfindingTileOld);
+                }
+            }
+        }
+
+        while (node.previous != null)
+        {
+            pathFindingTilemap.SetTile(node.position, pathfindingTileCurrent);
+            node = node.previous;
+        }
+    }
+
     private void SetTile(TerrainType terrainType, int row, int column)
     {
         var terrain = terrainList.Find(t => t.type == terrainType);
         terrain.tilemap.SetTile(new Vector3Int(row, column, 0), terrain.tile);
+    }
+
+    internal void ClearNodes()
+    {
+        pathFindingTilemap.ClearAllTiles();
     }
 
     public bool IsWalkableTile(Vector3Int cell, bool requestFromEnemy)

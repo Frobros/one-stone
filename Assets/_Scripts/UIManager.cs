@@ -51,10 +51,7 @@ public class UIManager : MonoBehaviour
         gameText.text = "Move and Place with SPACE!";
     }
 
-    public void OnInitEnemyDiceRolls()
-    {
-    }
-    public void OnWaitForEnemyDiceRoll(Enemy enemy)
+    public void OnEnemyRollDice(Enemy enemy)
     {
         gameObject.SetActive(true);
         gameText.text = "Your Enemies are on the move...";
@@ -65,8 +62,4 @@ public class UIManager : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-
-    public void OnEnemyRollDice() {}
-
-    public void OnEnemyMove() {}
 }
