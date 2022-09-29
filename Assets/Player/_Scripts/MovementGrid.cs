@@ -30,19 +30,19 @@ public class MovementGrid : MonoBehaviour
                 Vector3Int pointUp = new Vector3Int(point.x, point.y + 1, point.z);
                 Vector3Int pointDown = new Vector3Int(point.x, point.y - 1, point.z);
 
-                if (LevelManager.Instance.IsWalkableTile(pointUp, isEnemy))
+                if (GridTerrainManager.Instance.IsWalkableTile(pointUp, isEnemy))
                 {
                     pointSet.Add(pointUp);
                 }
-                if (LevelManager.Instance.IsWalkableTile(pointLeft, isEnemy))
+                if (GridTerrainManager.Instance.IsWalkableTile(pointLeft, isEnemy))
                 {
                     pointSet.Add(pointLeft);
                 }
-                if (LevelManager.Instance.IsWalkableTile(pointDown, isEnemy))
+                if (GridTerrainManager.Instance.IsWalkableTile(pointDown, isEnemy))
                 {
                     pointSet.Add(pointDown);
                 }
-                if (LevelManager.Instance.IsWalkableTile(pointRight, isEnemy))
+                if (GridTerrainManager.Instance.IsWalkableTile(pointRight, isEnemy))
                 {
                     pointSet.Add(pointRight);
                 }

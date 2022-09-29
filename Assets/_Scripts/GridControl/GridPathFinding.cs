@@ -2,33 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathNode
+public class GridPathFinding : MonoBehaviour
 {
-    public PathNode previous;
-    public Vector3Int position;
-    public int gCost;
-    public int fCost;
-    public int hCost;
-
-    public PathNode(PathNode _previous, Vector3Int _position, int _gCost, int _fCost, int _hCost)
-    {
-        previous = _previous;
-        position = _position;
-        gCost = _gCost;
-        fCost = _fCost;
-        hCost = _hCost;
-    }
-}
-
-public class PathFinding : MonoBehaviour
-{
-    private static PathFinding _instance;
-    public static PathFinding Instance { get { return _instance; } }
+    private static GridPathFinding _instance;
+    public static GridPathFinding Instance { get { return _instance; } }
 
     public List<Vector3Int> positions;
     public bool isCalculating = false;
-    List<PathNode> nodes = new List<PathNode>();
-    List<PathNode> expandedNodes = new List<PathNode>();
+    public float repeatPerSecond = 0f;
+
+    private List<GridPathNode> nodes = new List<GridPathNode>();
+    private List<GridPathNode> expandedNodes = new List<GridPathNode>();
 
     private void Awake()
     {
@@ -46,24 +30,20 @@ public class PathFinding : MonoBehaviour
 
     private IEnumerator FindPath(Vector3Int from, Vector3Int to)
     {
-        LevelManager.Instance.ClearNodes();
+        GridTerrainManager.Instance.ClearNodes();
         positions = new List<Vector3Int>();
         Vector3Int targetDirection = (to - from);
 
-        nodes = new List<PathNode>();
-        expandedNodes = new List<PathNode>();
+        nodes = new List<GridPathNode>();
+        expandedNodes = new List<GridPathNode>();
         int hCost = Mathf.Abs(targetDirection.x) + Mathf.Abs(targetDirection.y);
-        PathNode currentNode = new PathNode(null, from, 0, hCost, hCost);
+        GridPathNode currentNode = new GridPathNode(null, from, 0, hCost, hCost);
+        float paintInterval = 1f / repeatPerSecond;
+        float time = 0f;
         while (currentNode.hCost > 1)
         {
-            // LevelManager.Instance.PaintNode(currentNode.position);
-            LevelManager.Instance.PaintPath(currentNode);
             ExpandNode(currentNode, to);
-            nodes.Sort((n1, n2) =>
-                n1.fCost < n2.fCost ? -1
-                : n1.fCost > n2.fCost ? 1
-                : 0
-            );
+            nodes.Sort((x, y) => GridPathNode.RankForSort(x, y));
             nodes.Remove(currentNode);
             expandedNodes.Add(currentNode);
             if (nodes.Count == 0)
@@ -72,7 +52,13 @@ public class PathFinding : MonoBehaviour
                 yield break;
             }
             currentNode = nodes[0];
-            yield return new WaitForSeconds(0.2f);
+            time += Time.deltaTime;
+            if (time >= paintInterval)
+            {
+                GridTerrainManager.Instance.PaintPath(currentNode);
+                time %= paintInterval;
+            }
+            yield return null;
         }
 
         positions.Add(to);
@@ -88,18 +74,18 @@ public class PathFinding : MonoBehaviour
         isCalculating = false;
     }
 
-    private void ExpandNode(PathNode currentNode, Vector3Int to)
+    private void ExpandNode(GridPathNode currentNode, Vector3Int to)
     {
-        LookAtNeighbourAt(Vector3Int.up, currentNode, to);
-        LookAtNeighbourAt(Vector3Int.down, currentNode, to);
-        LookAtNeighbourAt(Vector3Int.left, currentNode, to);
-        LookAtNeighbourAt(Vector3Int.right, currentNode, to);
+        CheckNeighbour(currentNode, Vector3Int.up, to);
+        CheckNeighbour(currentNode, Vector3Int.down, to);
+        CheckNeighbour(currentNode, Vector3Int.left, to);
+        CheckNeighbour(currentNode, Vector3Int.right, to);
     }
 
-    private void LookAtNeighbourAt(Vector3Int direction, PathNode currentNode, Vector3Int to)
+    private void CheckNeighbour(GridPathNode currentNode, Vector3Int direction, Vector3Int to)
     {
         Vector3Int neighbourAt = currentNode.position + direction;
-        if (!LevelManager.Instance.IsWalkableTile(neighbourAt, true))
+        if (!GridTerrainManager.Instance.IsWalkableTile(neighbourAt, true))
         {
             return;
         }
@@ -107,8 +93,8 @@ public class PathFinding : MonoBehaviour
         int hCost = Mathf.Abs(targetDirection.x) + Mathf.Abs(targetDirection.y);
         int gCost = currentNode.gCost + 1;
         int fCost = hCost + gCost;
-        PathNode neighbourNode = new PathNode(currentNode, neighbourAt, gCost, fCost, hCost);
-        PathNode other = nodes.Find(node => node.position == neighbourAt);
+        GridPathNode neighbourNode = new GridPathNode(currentNode, neighbourAt, gCost, fCost, hCost);
+        GridPathNode other = nodes.Find(node => node.position == neighbourAt);
         if (other == null)
         {
             other = expandedNodes.Find(node => node.position == neighbourAt);

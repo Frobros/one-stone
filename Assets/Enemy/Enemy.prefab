@@ -176,10 +176,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 5423046255010193801}
-  gridMovement: {fileID: 5423046256619331756}
-  isDiceDoneRolling: 1
   isMoving: 0
   isDoneWithTurn: 1
+  isDiceDoneRolling: 1
 --- !u!114 &5423046256619331756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +200,7 @@ MonoBehaviour:
   spriteLeft: {fileID: 5442171335384024621, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
   spriteDown: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
   spriteRight: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
+  isEnemy: 0
 --- !u!58 &119606172
 CircleCollider2D:
   m_ObjectHideFlags: 0

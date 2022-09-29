@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,6 +36,7 @@ public class PlayerLink : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         movementActionMap = playerInput.actions.FindActionMap("Move");
         rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
+        // FindObjectOfType<LightGridController>().ApplyLight(transform.position);
     }
 
     private void Update()

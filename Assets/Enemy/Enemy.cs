@@ -7,9 +7,10 @@ public class Enemy : MonoBehaviour
 {
     private GridMovement movement;
     public Dice dice;
-    public bool isDiceDoneRolling = true;
     public bool isMoving = false;
     public bool isDoneWithTurn = true;
+    public bool isDiceDoneRolling = true;
+    private bool isCalculatingPath;
 
     private void Awake()
     {
@@ -18,25 +19,25 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (!isDiceDoneRolling)
+        if (!isDiceDoneRolling && !dice.IsRolling)
         {
-            isDiceDoneRolling = !dice.IsRolling;
-
-            if (isDiceDoneRolling)
-            {
-                movement.ShowMovementGrid(dice.DiceValue);
-                GameLogic.Instance.SwitchToEnemyMoveMode();
-            }
+            isDiceDoneRolling = true;
+            movement.ShowMovementGrid(dice.DiceValue);
+            FindPathToPlayer();
         }
 
-        if (!isDoneWithTurn)
+
+        if (isCalculatingPath && !GridPathFinding.Instance.isCalculating)
         {
-            isDoneWithTurn = !movement.isMoving;
-            if (isDoneWithTurn)
-            {
-                movement.HideMovementGrid();
-                GameLogic.Instance.NextEnemyRollDice();
-            }
+            isCalculatingPath = false;
+            InitMoveToPlayer();
+        }
+
+        if (!isDoneWithTurn && !movement.isMoving)
+        {
+            isDoneWithTurn = true;
+            movement.HideMovementGrid();
+            GameLogic.Instance.NextEnemyRollDice();
         }
     }
 
@@ -48,14 +49,23 @@ public class Enemy : MonoBehaviour
         isDiceDoneRolling = false;
     }
 
-    internal void InitEnemyMovement()
+    internal void FindPathToPlayer()
+    {
+        Grid grid = FindObjectOfType<Grid>();
+        Vector3 from = transform.position;
+        Vector3 to = FindObjectOfType<PlayerLink>().transform.position;
+        GridPathFinding.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
+        isCalculatingPath = true;
+    }
+
+    internal void InitMoveToPlayer()
     {
         movement.isMoving = true;
         isDoneWithTurn = false;
         StartCoroutine(movement.StartMovingToPlayer());
     }
 
-    internal void InitRandomEnemyMove()
+    internal void InitRandomMove()
     {
         movement.StartMovingRandomly();
     }

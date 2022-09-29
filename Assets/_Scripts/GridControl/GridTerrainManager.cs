@@ -1,38 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
-public enum TerrainType
+public class GridTerrainManager : MonoBehaviour
 {
-    GROUND = 'g',
-    BASE = 'b',
-    PLAYER = 'p',
-    ENEMY = 'e'
-
-}
-
-[Serializable]
-public class Terrain
-{
-    public string name;
-    public int id;
-    public TerrainType type;
-    public char representingChar;
-    public LayerMask layerMask;
-    public Tilemap tilemap;
-    public TileBase tile;
-    public bool isWalkableByPlayer;
-    public bool isWalkableByEnemy;
-}
-
-public class LevelManager : MonoBehaviour
-{
-    private static LevelManager _instance;
-    public static LevelManager Instance { get { return _instance; } }
-    public List<Terrain> terrainList;
+    private static GridTerrainManager _instance;
+    public static GridTerrainManager Instance { get { return _instance; } }
+    public List<GridCellTerrain> terrainList;
     public Tilemap pathFindingTilemap;
     public TileBase pathfindingTileCurrent;
     public TileBase pathfindingTileOld;
@@ -60,13 +36,13 @@ public class LevelManager : MonoBehaviour
             for (int j = 0; j < words.Length; j++)
             {
                 int c = words[j][0];
-                if (Enum.IsDefined(typeof(TerrainType), c))
+                if (Enum.IsDefined(typeof(GridCellTerrainType), c))
                 {
-                    TerrainType terrainType = (TerrainType)(c);
+                    GridCellTerrainType terrainType = (GridCellTerrainType)(c);
                     SetTile(terrainType, j, -i);
                 }
 
-                if (words[j].Length > 1 && Enum.IsDefined(typeof(TerrainType), (int)words[j][1]))
+                if (words[j].Length > 1 && Enum.IsDefined(typeof(GridCellTerrainType), (int)words[j][1]))
                 {
                     if (words[j][1] == 'p')
                     {
@@ -79,7 +55,28 @@ public class LevelManager : MonoBehaviour
                 }
             }
         }
+        FindObjectOfType<GridShadowController>().Init(GetLevelBounds());
     }
+
+    public BoundsInt GetLevelBounds()
+    {
+
+        BoundsInt levelBounds = new BoundsInt();
+        foreach (var terrain in terrainList)
+        {
+            BoundsInt tilemapBounds = terrain.tilemap.cellBounds;
+            levelBounds.xMin = Mathf.Min(levelBounds.xMin, tilemapBounds.xMin);
+            levelBounds.xMax = Mathf.Max(levelBounds.xMax, tilemapBounds.xMax);
+            levelBounds.yMin = Mathf.Min(levelBounds.yMin, tilemapBounds.yMin);
+            levelBounds.yMax = Mathf.Max(levelBounds.yMax, tilemapBounds.yMax);
+        }
+        levelBounds.xMin -= 2;
+        levelBounds.xMax += 2;
+        levelBounds.yMin -= 2;
+        levelBounds.yMax += 2;
+        return levelBounds;
+    }
+
 
     internal void PaintNode(Vector3Int position)
     {
@@ -87,10 +84,9 @@ public class LevelManager : MonoBehaviour
         oldPosition = position;
     }
 
-    internal void PaintPath(PathNode node)
+    internal void PaintPath(GridPathNode node)
     {
         pathFindingTilemap.CompressBounds();
-        Debug.Log("Start Painting");
         BoundsInt bounds = pathFindingTilemap.cellBounds;
         TileBase[] allTiles = pathFindingTilemap.GetTilesBlock(bounds);
 
@@ -114,7 +110,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void SetTile(TerrainType terrainType, int row, int column)
+    private void SetTile(GridCellTerrainType terrainType, int row, int column)
     {
         var terrain = terrainList.Find(t => t.type == terrainType);
         terrain.tilemap.SetTile(new Vector3Int(row, column, 0), terrain.tile);
@@ -125,7 +121,7 @@ public class LevelManager : MonoBehaviour
         pathFindingTilemap.ClearAllTiles();
     }
 
-    public bool IsWalkableTile(Vector3Int cell, bool requestFromEnemy)
+    public bool IsWalkableTile(Vector3Int cell, bool requestFromEnemy = false)
     {
         foreach (var terrain in terrainList)
         {

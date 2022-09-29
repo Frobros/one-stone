@@ -26,12 +26,15 @@ using TMPro;
 
 public class Dice : MonoBehaviour
 {
-	private RNG rng;
+	private static RNG rng;
     private bool isRolling;
 	public bool IsRolling { get { return isRolling; } }
 	private void Awake()
 	{
-		rng = new RNG();
+		if (rng == null)
+        {
+			rng = new RNG();
+        }
 	}
 
     #region Dice Value
@@ -39,6 +42,10 @@ public class Dice : MonoBehaviour
 	[SerializeField] private int diceValue;
 	public int DiceValue { get { return diceValue; } }
 
+	public bool CompareIfGreater(Dice other)
+    {
+		return this.DiceValue > other.DiceValue;
+    }
 
 	public void OnRollDice()
     {

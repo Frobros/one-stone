@@ -15,6 +15,7 @@ public class GameLogic : MonoBehaviour
 
     private void Awake()
     {
+        Application.targetFrameRate = 60;
         _instance = this;
     }
 
@@ -71,7 +72,7 @@ public class GameLogic : MonoBehaviour
     {
         foreach (var enemy in enemies)
         {
-            enemy.InitRandomEnemyMove();
+            enemy.InitRandomMove();
         }
     }
 
@@ -97,11 +98,6 @@ public class GameLogic : MonoBehaviour
 
         cam.Target = enemies[currentEnemy].transform;
         UIManager.Instance.OnEnemyRollDice(enemies[currentEnemy]);
-    }
-
-    public void SwitchToEnemyMoveMode()
-    {
-        enemies[currentEnemy].InitEnemyMovement();
     }
     #endregion
 }
