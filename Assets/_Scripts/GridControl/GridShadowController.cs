@@ -57,14 +57,26 @@ public class GridShadowController : MonoBehaviour
         nextShadowNodes.ForEach(x =>
         {
             color = new Color(0, 0, 0, x.alpha);
-            shadowTilemap.SetColor(x.gridPosition, color);
+            this.shadowTilemap.SetColor(x.gridPosition, color);
         });
 
         // paints old shadow nodes black
-        currentShadowNodes
+        this.currentShadowNodes
             .Where(x => !nextShadowNodes.Exists(y => x.gridPosition == y.gridPosition)).ToList()
-            .ForEach(x => shadowTilemap.SetColor(x.gridPosition, Color.black));
+            .ForEach(x => this.shadowTilemap.SetColor(x.gridPosition, Color.black));
 
-        currentShadowNodes = nextShadowNodes;
+        this.currentShadowNodes = nextShadowNodes;
+    }
+
+    public float GetAlphaFromShadowMapFor(Vector3Int _gridPosition)
+    {
+        foreach (var shadowNode in this.currentShadowNodes)
+        {
+            if (shadowNode.gridPosition == _gridPosition)
+            {
+                return shadowNode.alpha;
+            }
+        }
+        return 1f;
     }
 }

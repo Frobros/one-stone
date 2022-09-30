@@ -109,8 +109,18 @@ public class GridMovement : MonoBehaviour
             Vector2 nextPosition = grid.GetCellCenterWorld(movements[i]);
             StartMovingRoutine(nextPosition - currentPosition, false);
             i++;
+
+            UpdateSpriteRenderer(movements[i]);
         }
         isMoving = false;
+    }
+
+    private void UpdateSpriteRenderer(Vector3Int gridPosition)
+    {
+        Color c = this.spriteRenderer.color;
+        c.a = 1f - FindObjectOfType<GridShadowController>().GetAlphaFromShadowMapFor(gridPosition);
+        this.spriteRenderer.sortingOrder = c.a < 1f ? 6 : 5;
+        this.spriteRenderer.color = c;
     }
 
     internal bool isTileReachable(Vector3Int position)
@@ -131,6 +141,8 @@ public class GridMovement : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+        UpdateSpriteRenderer(grid.WorldToCell(targetPosition));
         transform.position = targetPosition;
         isMakingStep = false;
     }
