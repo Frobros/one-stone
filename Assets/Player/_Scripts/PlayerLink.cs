@@ -98,13 +98,24 @@ public class PlayerLink : MonoBehaviour
         dice.OnRollDice();
         UIManager.Instance.OnPlayerRollDice();
     }
-    public void OnPlace()
+    public void OnPlace(InputAction.CallbackContext context)
     {
+        if (!context.started) return;
+        
+        Debug.Log("OnPlace");
         if (mode == InputMode.MOVE)
         {
             movement.SetMovementGridActive(false);
             DisableControls();
-            GameLogic.Instance.SwitchToEnemyRollDiceMode();
+            var cell = movement.WorldToCell(transform.position);
+            if (GridTerrainManager.Instance.IsBaseTile(cell))
+            {
+                GameLogic.Instance.SwitchToPlayerMoveFreelyMode();
+            }
+            else
+            {
+                GameLogic.Instance.SwitchToEnemyRollDiceMode();
+            }
         }
         else if (mode == InputMode.MOVE_FREELY)
         {
