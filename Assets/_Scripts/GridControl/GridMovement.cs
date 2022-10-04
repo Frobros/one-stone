@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using RNG = System.Random;
 
 public class GridMovement : MonoBehaviour
@@ -25,6 +26,12 @@ public class GridMovement : MonoBehaviour
 
     public bool isEnemy;
     private RNG rng;
+    private GridShadowController _gridShadowController;
+
+    private void Start()
+    {
+        _gridShadowController = FindObjectOfType<GridShadowController>();
+    }
 
     private void Awake()
     {
@@ -50,9 +57,13 @@ public class GridMovement : MonoBehaviour
             Vector2 newPosition = transform.position + (Vector3)direction;
             Vector3Int tileCell = grid.WorldToCell(newPosition);
             bool isTileCellWalkable = isMovingFreely && GridTerrainManager.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
-            if (isTileCellWalkable)
+            if (isTileCellWalkable) 
             {
-                FindObjectOfType<GridShadowController>().ApplyLight(newPosition);
+                UpdateSpriteRenderer(tileCell);
+                if (!isEnemy)
+                {
+                    _gridShadowController.ApplyLight(newPosition);
+                }
                 StartCoroutine(StartMoving(direction));
             }
             else
@@ -109,18 +120,16 @@ public class GridMovement : MonoBehaviour
             Vector2 nextPosition = grid.GetCellCenterWorld(movements[i]);
             StartMovingRoutine(nextPosition - currentPosition, false);
             i++;
-
-            UpdateSpriteRenderer(movements[i]);
         }
         isMoving = false;
     }
 
     private void UpdateSpriteRenderer(Vector3Int gridPosition)
     {
-        Color c = this.spriteRenderer.color;
-        c.a = 1f - FindObjectOfType<GridShadowController>().GetAlphaFromShadowMapFor(gridPosition);
-        this.spriteRenderer.sortingOrder = c.a < 1f ? 6 : 5;
-        this.spriteRenderer.color = c;
+        var color = this.spriteRenderer.color;
+        color.a = Mathf.Min(2f * (1f - _gridShadowController.GetAlphaAt(gridPosition)), 1f);
+        this.spriteRenderer.sortingOrder = color.a > 0f ? 6 : 4;
+        this.spriteRenderer.color = color;
     }
 
     internal bool isTileReachable(Vector3Int position)
@@ -196,6 +205,11 @@ public class GridMovement : MonoBehaviour
     public Vector3 GetGridCenterPosition(Vector3 position)
     {
         return grid.GetCellCenterWorld(grid.WorldToCell(position));
+    }
+
+    public Vector3Int WorldToCell(Vector3 position)
+    {
+        return grid.WorldToCell(position);
     }
 
     public void SetMovementGridActive(bool active)

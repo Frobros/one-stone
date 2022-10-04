@@ -186,6 +186,22 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
+      value: 6760e68a-267c-41ab-978b-bd4ce539d53a
+      objectReference: {fileID: 0}
+    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
+      value: Title/StartGame[/Keyboard/space,/Keyboard/enter]
+      objectReference: {fileID: 0}
+    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1022033370557515924, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
       propertyPath: m_SortingOrder
       value: 6

@@ -9,6 +9,7 @@ public class GridShadowController : MonoBehaviour
     public TileBase shadowTile;
     private BoundsInt levelBounds;
     public int radius;
+    public float PENALTY;
     public List<ShadowNode> currentShadowNodes = new List<ShadowNode>();
 
     public void Init(BoundsInt _levelBounds)
@@ -37,14 +38,22 @@ public class GridShadowController : MonoBehaviour
 
         // find new shadow nodes
         var nextShadowNodes = new List<ShadowNode>();
-        nextShadowNodes.Add(new ShadowNode(currentPlayerPosition, Vector3Int.zero, 0, Vector3Int.zero, radius));
+        nextShadowNodes.Add(new ShadowNode(
+            currentPlayerPosition, 
+            Vector3Int.zero,
+            0,
+            0,
+            Vector3Int.zero,
+            radius,
+            PENALTY
+        ));
         var currentNode = nextShadowNodes[0];
         while (currentNode.walkCost < radius && !currentNode.isUnfolded)
         {
-            var shadowNodeCandidates = nextShadowNodes[0].UnfoldNode();
+            var shadowNodeCandidates = nextShadowNodes[0].UnfoldNode(PENALTY);
             shadowNodeCandidates.RemoveAll(x => {
-                return nextShadowNodes.Exists(y => x.HasSamePosition(y))
-                    || !GridTerrainManager.Instance.IsWalkableTile(x.gridPosition);
+                return !GridTerrainManager.Instance.IsWalkableTile(x.gridPosition)
+                    || nextShadowNodes.Exists(y => x.HasSamePosition(y) && x.walkCost >= y.walkCost);
             });
             nextShadowNodes.AddRange(shadowNodeCandidates);
             nextShadowNodes.Sort((x, y) => x.CompareWalkedDistance(y));
@@ -68,7 +77,7 @@ public class GridShadowController : MonoBehaviour
         this.currentShadowNodes = nextShadowNodes;
     }
 
-    public float GetAlphaFromShadowMapFor(Vector3Int _gridPosition)
+    public float GetAlphaAt(Vector3Int _gridPosition)
     {
         foreach (var shadowNode in this.currentShadowNodes)
         {

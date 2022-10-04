@@ -71,7 +71,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 4
   m_Sprite: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2e486eefeecfb4eae615dc3e2d4ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
+  moveTime: 0.2
   isMakingStep: 0
   isMoving: 0
   movementGridPrefab: {fileID: 6289673837528076871, guid: 9ad471b085becac41805640706e70b05, type: 3}

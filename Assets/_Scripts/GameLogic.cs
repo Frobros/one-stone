@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,7 +39,7 @@ public class GameLogic : MonoBehaviour
         SwitchToPlayerMoveFreelyMode();
     }
 
-    private void SwitchToPlayerMoveFreelyMode()
+    public void SwitchToPlayerMoveFreelyMode()
     {
         cam.Target = player.transform;
         player.SwitchToMoveFreelyMode();

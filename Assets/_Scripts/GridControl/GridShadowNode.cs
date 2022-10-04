@@ -6,16 +6,26 @@ public class ShadowNode
     public Vector3Int gridPosition;
     public Vector3Int fromDirection;
     public int maxDistance;
-    public int walkCost;
+    public float walkCost;
     public float alpha;
+    public int numberOfCorners;
     public bool isUnfolded = false;
-    private static int PENALTY = 2;
 
-    public ShadowNode(Vector3Int _previousPosition, Vector3Int _previousDirection, int _previousWalkCost, Vector3Int _direction, int _maxDistance)
-    {
+    public ShadowNode(
+        Vector3Int _previousPosition,
+        Vector3Int _previousDirection,
+        float _previousWalkCost,
+        int _previousNumberOfCorners,
+        Vector3Int _direction,
+        int _maxDistance,
+        float penalty
+    ) {
         this.gridPosition = _previousPosition + _direction;
         this.fromDirection = _direction;
         this.maxDistance = _maxDistance;
+        this.numberOfCorners = _previousNumberOfCorners +
+            (_previousDirection == Vector3Int.zero || _previousDirection == _direction ? 0 : 1);
+        
         if (_previousDirection == Vector3Int.zero && _previousDirection == _direction)
         {
             this.walkCost = 0;
@@ -24,23 +34,23 @@ public class ShadowNode
         {
             this.walkCost = _previousWalkCost + 1;
         }
-        else
+        else if (numberOfCorners >= 1)
         {
-            this.walkCost = _previousWalkCost + PENALTY;
+            this.walkCost = _previousWalkCost + penalty;
         }
-        this.alpha = (float)this.walkCost / this.maxDistance;
+        this.alpha = this.walkCost / this.maxDistance;
     }
 
-    public List<ShadowNode> UnfoldNode()
+    public List<ShadowNode> UnfoldNode(float penalty)
     {
         this.isUnfolded = true;
 
         var nodes = new List<ShadowNode>()
         {
-            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, Vector3Int.up, maxDistance),
-            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, Vector3Int.down, maxDistance),
-            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, Vector3Int.left, maxDistance),
-            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, Vector3Int.right, maxDistance)
+            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, this.numberOfCorners, Vector3Int.up, maxDistance, penalty),
+            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, this.numberOfCorners, Vector3Int.down, maxDistance, penalty),
+            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, this.numberOfCorners, Vector3Int.left, maxDistance, penalty),
+            new ShadowNode(this.gridPosition, this.fromDirection, this.walkCost, this.numberOfCorners, Vector3Int.right, maxDistance, penalty)
         };
         return nodes;
     }

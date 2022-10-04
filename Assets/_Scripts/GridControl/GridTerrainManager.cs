@@ -13,6 +13,7 @@ public class GridTerrainManager : MonoBehaviour
     public TileBase pathfindingTileCurrent;
     public TileBase pathfindingTileOld;
     public Vector3Int oldPosition;
+    public int level;
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class GridTerrainManager : MonoBehaviour
 
     private void LoadTerrain()
     {
-        var textFile = Resources.Load<TextAsset>("TestLevel");
+        var textFile = Resources.Load<TextAsset>($"Level{level}");
         var content = textFile.text;
         var allLines = content.Split('\n');
         for (int i = 0; i < allLines.Length; i++)
@@ -138,5 +139,10 @@ public class GridTerrainManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public bool IsBaseTile(Vector3Int cell)
+    {
+        return terrainList.Exists(t => t.type == GridCellTerrainType.BASE && t.tilemap.GetTile(cell) != null);
     }
 }
