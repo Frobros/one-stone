@@ -23,22 +23,25 @@ public class PlayerLink : MonoBehaviour
     private bool isDiceDoneRolling = true;
     public InputMode mode;
 
-    private void Start()
+    private void Awake()
     {
-        movement = GetComponent<GridMovement>();
-        transform.position = movement.GetGridCenterPosition(transform.position);
-
-        UIManager.Instance.SetPlayerDice(dice);
     }
 
-    internal void Initialize()
+    public void Initialize()
+    {
+        InitializeMovement();
+        movement = GetComponent<GridMovement>();
+        movement.Initialize();
+        transform.position = movement.GetGridCenterPosition(transform.position);
+    }
+
+    private void InitializeMovement()
     {
         playerInput = GetComponent<PlayerInput>();
         movementActionMap = playerInput.actions.FindActionMap("Move");
         rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
-        // FindObjectOfType<LightGridController>().ApplyLight(transform.position);
     }
-
+        
     private void Update()
     {
         if (!isDiceDoneRolling)
@@ -57,8 +60,8 @@ public class PlayerLink : MonoBehaviour
         if (mode != InputMode.MOVE_FREELY)
         {
             mode = InputMode.MOVE_FREELY;
-            movementActionMap.Enable();
             rollingDiceActionMap.Disable();
+            movementActionMap.Enable();
         }
     }
 
@@ -67,8 +70,8 @@ public class PlayerLink : MonoBehaviour
         if (mode != InputMode.MOVE)
         {
             mode = InputMode.MOVE;
-            movementActionMap.Enable();
             rollingDiceActionMap.Disable();
+            movementActionMap.Enable();
         }
     }
 
@@ -96,7 +99,7 @@ public class PlayerLink : MonoBehaviour
     {
         isDiceDoneRolling = false;
         dice.OnRollDice();
-        UIManager.Instance.OnPlayerRollDice();
+        GameLogic.Instance.OnPlayerRollDice();
     }
     public void OnPlace(InputAction.CallbackContext context)
     {
@@ -108,7 +111,7 @@ public class PlayerLink : MonoBehaviour
             movement.SetMovementGridActive(false);
             DisableControls();
             var cell = movement.WorldToCell(transform.position);
-            if (GridTerrainManager.Instance.IsBaseTile(cell))
+            if (GameLogic.Instance.IsBaseTile(cell))
             {
                 GameLogic.Instance.SwitchToPlayerMoveFreelyMode();
             }
@@ -137,7 +140,7 @@ public class PlayerLink : MonoBehaviour
             bool isMovingFreely = mode == InputMode.MOVE_FREELY;
             if (isMovingFreely && !movement.isMakingStep)
             {
-                GameLogic.Instance.PlayerMakingFreeMove();
+                GameLogic.Instance.InitializeMoveAllEnemiesRandom();
             }
 
             if (direction.x < 0)

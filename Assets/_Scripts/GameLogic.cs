@@ -1,26 +1,90 @@
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameLogic : MonoBehaviour
 {
-    private static GameLogic _instance;
-    public static GameLogic Instance { get { return _instance; } }
-    public PlayerLink player;
-    public FollowTarget cam;
-    public GameObject enemyPrefab;
+    private PlayerLink scenePlayer;
     private bool isReloading;
 
+    private LevelManager levelManager;
+    private UIManager uiManager;
+    private GridPathFinding gridPathFinding;
+    private GridTerrainManager sceneGridTerrainManager;
+    public GridTerrainManager GridTerrainManager { get { return sceneGridTerrainManager; } }
+    private List<Enemy> sceneEnemies;
+    private FollowTarget sceneCamera;
+    public int levelWhenReload = 0;
+
+    public List<Vector3Int> GridPathPositions {  get { return gridPathFinding.positions; } }
+    public bool IsCalculatingPath { get { return gridPathFinding.isCalculating; } }
+
+    #region Singleton
+
+    private static GameLogic _instance;
+    public static GameLogic Instance { get { return _instance; } }
     private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Application.targetFrameRate = 60;
         _instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        gridPathFinding = GetComponent<GridPathFinding>();
+        levelManager = GetComponent<LevelManager>();
+        uiManager = GetComponent<UIManager>();
     }
+
+    #endregion Singleton
+
+    #region Initialization
+    // called first
+    void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
+
+    // called second
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) { Initialize(); }
+
+    // called when the game is terminated
+    void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
+
+    private void Initialize()
+    {
+        isReloading = false;
+        scenePlayer = FindObjectOfType<PlayerLink>();
+        scenePlayer.Initialize();
+        sceneCamera = FindObjectOfType<FollowTarget>();
+        sceneGridTerrainManager = FindObjectOfType<GridTerrainManager>();
+        sceneEnemies = sceneGridTerrainManager.enemies;
+
+        LoadLevel(levelWhenReload);
+        SwitchToPlayerMoveFreelyMode();
+    }
+
+    internal void PaintPath(GridPathNode currentNode)
+    {
+        sceneGridTerrainManager.PaintPath(currentNode);
+    }
+
+    // maybe public for loading new levels during gameplay
+    private void LoadLevel(int level)
+    {
+        sceneGridTerrainManager.LoadTerrainForLevel(level);
+    }
+
+    #endregion Initialization
+
 
     public void SetPlayerPosition(Vector3Int tilePosition)
     {
         Vector3 pos = FindObjectOfType<Grid>().GetCellCenterWorld(tilePosition);
-        player.transform.position = pos;
+        scenePlayer.transform.position = pos;
     }
 
     public void OnReloadScene()
@@ -28,74 +92,98 @@ public class GameLogic : MonoBehaviour
         if (!isReloading)
         {
             isReloading = true;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            levelManager.LoadCurrentLevel();
         }
-    }
-
-    public void StartGame()
-    {
-        player.Initialize();
-        enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
-        SwitchToPlayerMoveFreelyMode();
     }
 
     public void SwitchToPlayerMoveFreelyMode()
     {
-        cam.Target = player.transform;
-        player.SwitchToMoveFreelyMode();
-        UIManager.Instance.OnPlayerMoveFreely();
+        sceneCamera.Target = scenePlayer.transform;
+        scenePlayer.SwitchToMoveFreelyMode();
+        uiManager.OnPlayerMoveFreely();
+    }
+
+    public bool IsBaseTile(Vector3Int cell)
+    {
+        return GridTerrainManager.IsBaseTile(cell);
+    }
+
+    public bool IsWalkableTile(Vector3Int neighbourAt, bool v = false)
+    {
+        return sceneGridTerrainManager.IsWalkableTile(neighbourAt, v);
     }
 
     public void SwitchToPlayerRollDiceMode()
     {
-        cam.Target = player.transform;
-        player.SwitchToRollDiceMode();
-        UIManager.Instance.OnWaitForPlayerDiceRoll();
+        sceneCamera.Target = scenePlayer.transform;
+        scenePlayer.SwitchToRollDiceMode();
+        uiManager.OnWaitForPlayerDiceRoll();
     }
 
     public void SwitchToPlayerMoveMode()
     {
-        player.SwitchToMoveMode();
-        UIManager.Instance.OnPlayerMove();
+        scenePlayer.SwitchToMoveMode();
+        uiManager.OnPlayerMove();
+    }
+
+    public void OnPlayerRollDice()
+    {
+
     }
 
     #region Enemy
-    internal void SpawnEnemy(Vector3Int gridPosition)
-    {
-        var enemy = Instantiate(enemyPrefab, FindObjectOfType<Grid>().GetCellCenterWorld(gridPosition), Quaternion.identity).GetComponent<Enemy>();
-        enemies.Add(enemy);
-    }
 
-    internal void PlayerMakingFreeMove()
+    internal void InitializeMoveAllEnemiesRandom()
     {
-        foreach (var enemy in enemies)
+        foreach (var enemy in sceneGridTerrainManager.enemies)
         {
-            enemy.InitRandomMove();
+            enemy.InitRandomMove(); 
         }
     }
 
-    public List<Enemy> enemies = new List<Enemy>();
     public int currentEnemy = 0;
 
     public void SwitchToEnemyRollDiceMode()
     {
         currentEnemy = 0;
-        cam.Target = enemies[currentEnemy].transform;
-        UIManager.Instance.OnEnemyRollDice(enemies[currentEnemy]);
+
+        if (currentEnemy >= sceneEnemies.Count)
+        {
+            Debug.LogWarning("No enemies present!");
+            SwitchToPlayerRollDiceMode();
+            return;
+        }
+        var firstEnemy = sceneEnemies[currentEnemy];
+        sceneCamera.Target = firstEnemy.transform;
+        uiManager.OnEnemyRollDice(firstEnemy);
+        firstEnemy.OnRollDice();
     }
 
     public void NextEnemyRollDice()
     {
         currentEnemy++;
 
-        if (currentEnemy >= enemies.Count)
+        if (currentEnemy >= sceneEnemies.Count)
         {
             SwitchToPlayerRollDiceMode();
             return;
         }
 
-        cam.Target = enemies[currentEnemy].transform;
-        UIManager.Instance.OnEnemyRollDice(enemies[currentEnemy]);
+
+        var nextEnemy = sceneEnemies[currentEnemy];
+        sceneCamera.Target = nextEnemy.transform;
+        uiManager.OnEnemyRollDice(nextEnemy);
+        nextEnemy.OnRollDice();
     }
-    #endregion
+
+    public void SetEnemyDice(Dice dice)
+    {
+        uiManager.SetEnemyDice(dice);
+    }
+
+    public void StartPathFinding(Vector3Int fromCell, Vector3Int toCell)
+    {
+        gridPathFinding.StartPathFinding(fromCell, toCell);
+    }
+   #endregion
 }

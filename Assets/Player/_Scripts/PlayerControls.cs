@@ -189,6 +189,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""99d66521-51da-46f2-93be-2c39506dad23"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -200,6 +208,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""89e946dc-69a5-4ba9-a09e-bf7d83a5b706"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -216,6 +235,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""97289e3e-ce37-4dd0-97a1-bb8b5c6c42d1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -227,6 +254,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44902d57-691f-4b11-a8c7-1d6c85ccc899"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -281,9 +319,11 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         // ThrowDice
         m_ThrowDice = asset.FindActionMap("ThrowDice", throwIfNotFound: true);
         m_ThrowDice_Action = m_ThrowDice.FindAction("Action", throwIfNotFound: true);
+        m_ThrowDice_Reload = m_ThrowDice.FindAction("Reload", throwIfNotFound: true);
         // EnemyEncounter
         m_EnemyEncounter = asset.FindActionMap("EnemyEncounter", throwIfNotFound: true);
         m_EnemyEncounter_Newaction = m_EnemyEncounter.FindAction("New action", throwIfNotFound: true);
+        m_EnemyEncounter_Reload = m_EnemyEncounter.FindAction("Reload", throwIfNotFound: true);
         // Title
         m_Title = asset.FindActionMap("Title", throwIfNotFound: true);
         m_Title_StartGame = m_Title.FindAction("StartGame", throwIfNotFound: true);
@@ -386,11 +426,13 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_ThrowDice;
     private IThrowDiceActions m_ThrowDiceActionsCallbackInterface;
     private readonly InputAction m_ThrowDice_Action;
+    private readonly InputAction m_ThrowDice_Reload;
     public struct ThrowDiceActions
     {
         private @PlayerControls m_Wrapper;
         public ThrowDiceActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Action => m_Wrapper.m_ThrowDice_Action;
+        public InputAction @Reload => m_Wrapper.m_ThrowDice_Reload;
         public InputActionMap Get() { return m_Wrapper.m_ThrowDice; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -403,6 +445,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Action.started -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnAction;
                 @Action.performed -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnAction;
                 @Action.canceled -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnAction;
+                @Reload.started -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_ThrowDiceActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_ThrowDiceActionsCallbackInterface = instance;
             if (instance != null)
@@ -410,6 +455,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Action.started += instance.OnAction;
                 @Action.performed += instance.OnAction;
                 @Action.canceled += instance.OnAction;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -419,11 +467,13 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_EnemyEncounter;
     private IEnemyEncounterActions m_EnemyEncounterActionsCallbackInterface;
     private readonly InputAction m_EnemyEncounter_Newaction;
+    private readonly InputAction m_EnemyEncounter_Reload;
     public struct EnemyEncounterActions
     {
         private @PlayerControls m_Wrapper;
         public EnemyEncounterActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Newaction => m_Wrapper.m_EnemyEncounter_Newaction;
+        public InputAction @Reload => m_Wrapper.m_EnemyEncounter_Reload;
         public InputActionMap Get() { return m_Wrapper.m_EnemyEncounter; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -436,6 +486,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Newaction.started -= m_Wrapper.m_EnemyEncounterActionsCallbackInterface.OnNewaction;
                 @Newaction.performed -= m_Wrapper.m_EnemyEncounterActionsCallbackInterface.OnNewaction;
                 @Newaction.canceled -= m_Wrapper.m_EnemyEncounterActionsCallbackInterface.OnNewaction;
+                @Reload.started -= m_Wrapper.m_EnemyEncounterActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_EnemyEncounterActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_EnemyEncounterActionsCallbackInterface.OnReload;
             }
             m_Wrapper.m_EnemyEncounterActionsCallbackInterface = instance;
             if (instance != null)
@@ -443,6 +496,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Newaction.started += instance.OnNewaction;
                 @Newaction.performed += instance.OnNewaction;
                 @Newaction.canceled += instance.OnNewaction;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
             }
         }
     }
@@ -489,10 +545,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface IThrowDiceActions
     {
         void OnAction(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface IEnemyEncounterActions
     {
         void OnNewaction(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
     public interface ITitleActions
     {

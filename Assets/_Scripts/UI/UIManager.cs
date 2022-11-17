@@ -1,65 +1,58 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class UIManager : MonoBehaviour
 {
-    #region FakeSingleton
-    private static UIManager _instance;
-    public static UIManager Instance { get { return _instance; } }
+    public DiceUI enemyDiceUI;
+    public DiceUI playerDiceUI;
+    public GameObject textPanel;
+    public Image textBackground;
+    public Color[] Colors;
+    public TextMeshProUGUI gameText;
+
     private void Awake()
     {
-        _instance = this;
-    }
-    #endregion
-
-    #region Dice UI
-    public DiceUI playerDiceUI;
-    public DiceUI enemyDiceUI;
-    internal void SetPlayerDice(Dice dice)
-    {
-        playerDiceUI.SetDice(dice);
+        textBackground.color = Colors[0];
+        playerDiceUI.SetDice(FindObjectOfType<PlayerLink>().dice);
     }
 
-    internal void SetEnemyDice(Dice dice)
+    public void SetEnemyDice(Dice dice)
     {
         enemyDiceUI.SetDice(dice);
     }
 
-    #endregion
-
-
-    public GameObject textPanel;
-    public TextMeshProUGUI gameText;
-
     public void OnWaitForPlayerDiceRoll()
     {
-        gameObject.SetActive(true);
+        textPanel.SetActive(true);
+        textBackground.color = Colors[1];
         gameText.text = "Press SPACE to roll your dice!";
     }
     public void OnPlayerRollDice()
     {
-        gameObject.SetActive(true);
+        textPanel.SetActive(true);
+        textBackground.color = Colors[2];
         gameText.text = "Wait for it...";
     }
 
     public void OnPlayerMove()
     {
-        gameObject.SetActive(true);
+        textPanel.SetActive(true);
+        textBackground.color = Colors[3];
         gameText.text = "Move and Place with SPACE!";
     }
 
     public void OnEnemyRollDice(Enemy enemy)
     {
-        gameObject.SetActive(true);
+        textPanel.SetActive(true);
         gameText.text = "Your Enemies are on the move...";
-        enemy.OnRollDice();
+        textBackground.color = Colors[4];
     }
 
     internal void OnPlayerMoveFreely()
     {
-        gameObject.SetActive(false);
+        textBackground.color = Colors[0];
+        textPanel.SetActive(false);
     }
 }

@@ -52,7 +52,7 @@ public class GridShadowController : MonoBehaviour
         {
             var shadowNodeCandidates = nextShadowNodes[0].UnfoldNode(PENALTY);
             shadowNodeCandidates.RemoveAll(x => {
-                return !GridTerrainManager.Instance.IsWalkableTile(x.gridPosition)
+                return !GameLogic.Instance.IsWalkableTile(x.gridPosition)
                     || nextShadowNodes.Exists(y => x.HasSamePosition(y) && x.walkCost >= y.walkCost);
             });
             nextShadowNodes.AddRange(shadowNodeCandidates);

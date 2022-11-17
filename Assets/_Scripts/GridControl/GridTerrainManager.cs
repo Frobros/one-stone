@@ -6,27 +6,15 @@ using UnityEngine.Tilemaps;
 
 public class GridTerrainManager : MonoBehaviour
 {
-    private static GridTerrainManager _instance;
-    public static GridTerrainManager Instance { get { return _instance; } }
+    public GameObject enemyPrefab; 
     public List<GridCellTerrain> terrainList;
+    public List<Enemy> enemies;
     public Tilemap pathFindingTilemap;
     public TileBase pathfindingTileCurrent;
     public TileBase pathfindingTileOld;
     public Vector3Int oldPosition;
-    public int level;
 
-    private void Awake()
-    {
-        _instance = this;
-    }
-
-    private void Start()
-    {
-        LoadTerrain();
-        GameLogic.Instance.StartGame();
-    }
-
-    private void LoadTerrain()
+    public void LoadTerrainForLevel(int level)
     {
         var textFile = Resources.Load<TextAsset>($"Level{level}");
         var content = textFile.text;
@@ -51,7 +39,10 @@ public class GridTerrainManager : MonoBehaviour
                     }
                     else if (words[j][1] == 'e')
                     {
-                        GameLogic.Instance.SpawnEnemy(new Vector3Int(j, -i, 0));
+                        var gridPosition = new Vector3Int(j, -i, 0);
+
+                        var enemy = Instantiate(enemyPrefab, FindObjectOfType<Grid>().GetCellCenterWorld(gridPosition), Quaternion.identity).GetComponent<Enemy>();
+                        enemies.Add(enemy);
                     }
                 }
             }
@@ -89,13 +80,13 @@ public class GridTerrainManager : MonoBehaviour
     {
         pathFindingTilemap.CompressBounds();
         BoundsInt bounds = pathFindingTilemap.cellBounds;
-        TileBase[] allTiles = pathFindingTilemap.GetTilesBlock(bounds);
+        TileBase[] tiles = pathFindingTilemap.GetTilesBlock(bounds);
 
         for (int x = 0; x < bounds.size.x; x++)
         {
             for (int y = 0; y < bounds.size.y; y++)
             {
-                TileBase tile = allTiles[x + y * bounds.size.x];
+                TileBase tile = tiles[x + y * bounds.size.x];
                 if (tile != null)
                 {
                     Vector3Int tilePosition = new Vector3Int(bounds.min.x + x, bounds.min.y + y, 0);

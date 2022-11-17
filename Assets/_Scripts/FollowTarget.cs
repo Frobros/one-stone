@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class FollowTarget : MonoBehaviour
 {
-    internal Transform Target;
+    public Transform Target;
     public float speed;
 
-    void Update()
+    private void Awake()
+    {
+        Vector3 targetPosition = Target.position;
+        targetPosition.z = transform.position.z;
+        transform.position = targetPosition;
+    }
+    private void Update()
     {
         if (Target != null)
         {

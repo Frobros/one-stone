@@ -28,13 +28,10 @@ public class GridMovement : MonoBehaviour
     private RNG rng;
     private GridShadowController _gridShadowController;
 
-    private void Start()
+
+    public void Initialize()
     {
         _gridShadowController = FindObjectOfType<GridShadowController>();
-    }
-
-    private void Awake()
-    {
         grid = FindObjectOfType<Grid>();
         movementGrid = Instantiate(movementGridPrefab, grid.transform).GetComponent<MovementGrid>();
 
@@ -56,7 +53,7 @@ public class GridMovement : MonoBehaviour
             isMakingStep = true;
             Vector2 newPosition = transform.position + (Vector3)direction;
             Vector3Int tileCell = grid.WorldToCell(newPosition);
-            bool isTileCellWalkable = isMovingFreely && GridTerrainManager.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
+            bool isTileCellWalkable = isMovingFreely && GameLogic.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
             if (isTileCellWalkable) 
             {
                 UpdateSpriteRenderer(tileCell);
@@ -80,22 +77,22 @@ public class GridMovement : MonoBehaviour
             isMakingStep = true;
             List<Vector3Int> positions = new List<Vector3Int>();
             Vector3Int pos = grid.WorldToCell((Vector2)transform.position + up);
-            if (GridTerrainManager.Instance.IsWalkableTile(pos, true))
+            if (GameLogic.Instance.IsWalkableTile(pos, true))
             {
                 positions.Add(pos);
             }
             pos = grid.WorldToCell((Vector2)transform.position + down);
-            if (GridTerrainManager.Instance.IsWalkableTile(pos, true))
+            if (GameLogic.Instance.IsWalkableTile(pos, true))
             {
                 positions.Add(pos);
             }
             pos = grid.WorldToCell((Vector2)transform.position + left);
-            if (GridTerrainManager.Instance.IsWalkableTile(pos, true))
+            if (GameLogic.Instance.IsWalkableTile(pos, true))
             {
                 positions.Add(pos);
             }
             pos = grid.WorldToCell((Vector2)transform.position + right);
-            if (GridTerrainManager.Instance.IsWalkableTile(pos, true))
+            if (GameLogic.Instance.IsWalkableTile(pos, true))
             {
                 positions.Add(pos);
             }
@@ -108,7 +105,7 @@ public class GridMovement : MonoBehaviour
 
     internal IEnumerator StartMovingToPlayer()
     {
-        List<Vector3Int> movements = GridPathFinding.Instance.positions;
+        List<Vector3Int> movements = GameLogic.Instance.GridPathPositions;
 
         int i = 0;
         bool canReachTile = true;

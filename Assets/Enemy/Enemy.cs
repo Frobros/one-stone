@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private static int currentId = 0;
+    public int Id;
     private GridMovement movement;
     public Dice dice;
     public bool isMoving = false;
@@ -14,7 +16,9 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
+        Id = currentId++;
         movement = GetComponent<GridMovement>();
+        movement.Initialize();
     }
 
     private void Update()
@@ -27,7 +31,7 @@ public class Enemy : MonoBehaviour
         }
 
 
-        if (isCalculatingPath && !GridPathFinding.Instance.isCalculating)
+        if (isCalculatingPath && !GameLogic.Instance.IsCalculatingPath)
         {
             isCalculatingPath = false;
             InitMoveToPlayer();
@@ -44,7 +48,7 @@ public class Enemy : MonoBehaviour
 
     internal void OnRollDice()
     {
-        UIManager.Instance.SetEnemyDice(dice);
+        GameLogic.Instance.SetEnemyDice(dice);
         dice.OnRollDice();
         isDiceDoneRolling = false;
     }
@@ -54,7 +58,7 @@ public class Enemy : MonoBehaviour
         Grid grid = FindObjectOfType<Grid>();
         Vector3 from = transform.position;
         Vector3 to = FindObjectOfType<PlayerLink>().transform.position;
-        GridPathFinding.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
+        GameLogic.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
         isCalculatingPath = true;
     }
 
