@@ -56,7 +56,6 @@ public class GridMovement : MonoBehaviour
             bool isTileCellWalkable = isMovingFreely && GameLogic.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
             if (isTileCellWalkable) 
             {
-                UpdateSpriteRenderer(tileCell);
                 if (!isEnemy)
                 {
                     _gridShadowController.ApplyLight(newPosition);
@@ -121,6 +120,10 @@ public class GridMovement : MonoBehaviour
         isMoving = false;
     }
 
+    public void UpdateSpriteRenderer()
+    {
+        UpdateSpriteRenderer(grid.WorldToCell(transform.position));
+    }
     private void UpdateSpriteRenderer(Vector3Int gridPosition)
     {
         var color = this.spriteRenderer.color;
@@ -148,9 +151,9 @@ public class GridMovement : MonoBehaviour
             yield return null;
         }
 
-        UpdateSpriteRenderer(grid.WorldToCell(targetPosition));
         transform.position = targetPosition;
         isMakingStep = false;
+        UpdateSpriteRenderer(grid.WorldToCell(targetPosition));
     }
 
     private IEnumerator StartMovingBackAndForth(Vector2 direction)

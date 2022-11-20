@@ -75,6 +75,7 @@ public class GridShadowController : MonoBehaviour
             .ForEach(x => this.shadowTilemap.SetColor(x.gridPosition, Color.black));
 
         this.currentShadowNodes = nextShadowNodes;
+        GameLogic.Instance.UpdateAllSprites();
     }
 
     public float GetAlphaAt(Vector3Int _gridPosition)

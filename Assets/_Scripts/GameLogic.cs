@@ -103,6 +103,14 @@ public class GameLogic : MonoBehaviour
         uiManager.OnPlayerMoveFreely();
     }
 
+    internal void UpdateAllSprites()
+    {
+        foreach (var enemy in sceneEnemies)
+        {
+            enemy.GetComponent<GridMovement>().UpdateSpriteRenderer();
+        }
+    }
+
     public bool IsBaseTile(Vector3Int cell)
     {
         return GridTerrainManager.IsBaseTile(cell);
