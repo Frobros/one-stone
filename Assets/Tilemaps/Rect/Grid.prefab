@@ -661,6 +661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32e060f15f070a46a121fcfa16b035d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 5423046256619331755, guid: 384e870662a16ae4ea51c5b0118b71a3, type: 3}
   terrainList:
   - name: Ground
     id: 0
@@ -684,8 +685,8 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 04549d2dc70ea584197eac449a3aa0b1, type: 2}
     isWalkableByPlayer: 1
     isWalkableByEnemy: 0
+  enemies: []
   pathFindingTilemap: {fileID: 1119056515}
   pathfindingTileCurrent: {fileID: 11400000, guid: 8f73c232291352f43acac674b1f9a93c, type: 2}
   pathfindingTileOld: {fileID: 11400000, guid: d1da2a1d351eaf44db13ad041c545772, type: 2}
   oldPosition: {x: 0, y: 0, z: 0}
-  level: 2

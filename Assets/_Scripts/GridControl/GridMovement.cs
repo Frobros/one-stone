@@ -26,12 +26,13 @@ public class GridMovement : MonoBehaviour
 
     public bool isEnemy;
     private RNG rng;
-    private GridShadowController _gridShadowController;
+    private GridShadowController gridShadowController;
+    private Coroutine interpolateAlphaCoroutine;
 
 
     public void Initialize()
     {
-        _gridShadowController = FindObjectOfType<GridShadowController>();
+        gridShadowController = FindObjectOfType<GridShadowController>();
         grid = FindObjectOfType<Grid>();
         movementGrid = Instantiate(movementGridPrefab, grid.transform).GetComponent<MovementGrid>();
 
@@ -56,10 +57,6 @@ public class GridMovement : MonoBehaviour
             bool isTileCellWalkable = isMovingFreely && GameLogic.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
             if (isTileCellWalkable) 
             {
-                if (!isEnemy)
-                {
-                    _gridShadowController.ApplyLight(newPosition);
-                }
                 StartCoroutine(StartMoving(direction));
             }
             else
@@ -127,9 +124,31 @@ public class GridMovement : MonoBehaviour
     private void UpdateSpriteRenderer(Vector3Int gridPosition)
     {
         var color = this.spriteRenderer.color;
-        color.a = Mathf.Min(2f * (1f - _gridShadowController.GetAlphaAt(gridPosition)), 1f);
-        this.spriteRenderer.sortingOrder = color.a > 0f ? 6 : 4;
-        this.spriteRenderer.color = color;
+        color.a = Mathf.Min(2f * (1f - this.gridShadowController.GetAlphaAt(gridPosition)), 1f);
+
+        if (this.interpolateAlphaCoroutine != null)
+        {
+            StopCoroutine(this.interpolateAlphaCoroutine);
+        }
+        this.interpolateAlphaCoroutine = StartCoroutine(InterpolateSpriteRendererAlpha(color));
+    }
+
+    private IEnumerator InterpolateSpriteRendererAlpha(Color targetColor)
+    {
+        var animateFor = 0.5f;
+        var animateTime = 0f;
+        var color = this.spriteRenderer.color;
+        if (color == targetColor) yield break;
+
+        while (animateTime < animateFor)
+        {
+            color = Color.Lerp(color, targetColor, animateTime/animateFor);
+            this.spriteRenderer.sortingOrder = color.a > 0f ? 6 : 4;
+            this.spriteRenderer.color = color;
+            animateTime += Time.deltaTime;
+            yield return null;
+        }
+        this.spriteRenderer.color = targetColor;
     }
 
     internal bool isTileReachable(Vector3Int position)
@@ -153,7 +172,12 @@ public class GridMovement : MonoBehaviour
 
         transform.position = targetPosition;
         isMakingStep = false;
-        UpdateSpriteRenderer(grid.WorldToCell(targetPosition));
+
+        if (!this.isEnemy)
+        {
+            gridShadowController.ApplyLight(targetPosition);
+        }
+        //UpdateSpriteRenderer(grid.WorldToCell(targetPosition));
     }
 
     private IEnumerator StartMovingBackAndForth(Vector2 direction)
@@ -178,6 +202,11 @@ public class GridMovement : MonoBehaviour
         }
         transform.position = originalPosition;
         isMakingStep = false;
+
+        if (!this.isEnemy)
+        {
+            GameLogic.Instance.UpdateAllSprites();
+        }
     }
 
 
