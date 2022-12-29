@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     public Color[] Colors;
     public TextMeshProUGUI gameText;
 
-    private void Awake()
+    public void Initialize()
     {
         textBackground.color = Colors[0];
         playerDiceUI.SetDice(FindObjectOfType<PlayerLink>().dice);

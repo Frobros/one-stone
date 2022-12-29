@@ -1,60 +1,50 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 using RNG = System.Random;
 
 public class GridMovement : MonoBehaviour
 {
-    public float moveTime;
-    public bool isMakingStep;
-    public bool isMoving = false;
-
     public GameObject movementGridPrefab;
-    private Grid grid;
-    private MovementGrid movementGrid;
-    private Vector2 up;
-    private Vector2 down;
-    private Vector2 left;
-    private Vector2 right;
 
-    public SpriteRenderer spriteRenderer;
+    protected const float moveTime = 0.2f;
+    public bool IsMakingStep;
+    public bool IsMoving;
+
+    protected RNG rng;
+    protected MovementGrid grid;
+    protected SpriteRenderer spriteRenderer;
+
+    protected Vector2 up;
+    protected Vector2 down;
+    protected Vector2 left;
+    protected Vector2 right;
+
     public Sprite spriteUp;
     public Sprite spriteLeft;
     public Sprite spriteDown;
     public Sprite spriteRight;
 
-    public bool isEnemy;
-    private RNG rng;
-    private GridShadowController gridShadowController;
-    private Coroutine interpolateAlphaCoroutine;
-
-
-    public void Initialize()
+    public virtual void Initialize()
     {
-        gridShadowController = FindObjectOfType<GridShadowController>();
-        grid = FindObjectOfType<Grid>();
-        movementGrid = Instantiate(movementGridPrefab, grid.transform).GetComponent<MovementGrid>();
+        this.grid = Instantiate(movementGridPrefab).GetComponent<MovementGrid>();
+        this.spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        this.rng = new RNG();
 
-        isEnemy = GetComponentInParent<Enemy>() != null;
-        movementGrid.isEnemy = isEnemy;
-
-        up = 0.5f * new Vector2(grid.cellSize.x, grid.cellSize.y);
-        down = -up;
-        left = 0.5f * new Vector2(-grid.cellSize.x, grid.cellSize.y);
-        right = -left;
-
-        rng = new RNG();
+        var cellSize = grid.GetCellSize();
+        this.up = 0.5f * new Vector2(cellSize.x, cellSize.y);
+        this.down = -up;
+        this.left = 0.5f * new Vector2(-cellSize.x, cellSize.y);
+        this.right = -left;
     }
 
     public void StartMovingRoutine(Vector2 direction, bool isMovingFreely)
     {
-        if (!isMakingStep)
+        if (!IsMakingStep)
         {
-            isMakingStep = true;
+            IsMakingStep = true;
             Vector2 newPosition = transform.position + (Vector3)direction;
             Vector3Int tileCell = grid.WorldToCell(newPosition);
-            bool isTileCellWalkable = isMovingFreely && GameLogic.Instance.IsWalkableTile(tileCell, false) || movementGrid.IsWalkable(tileCell);
+            bool isTileCellWalkable = isMovingFreely && GameLogic.Instance.IsWalkableTile(tileCell, false) || grid.IsWalkable(tileCell);
             if (isTileCellWalkable) 
             {
                 StartCoroutine(StartMoving(direction));
@@ -66,98 +56,8 @@ public class GridMovement : MonoBehaviour
         }
     }
 
-    public void StartMovingRandomly()
-    {
-        if (!isMakingStep)
-        {
-            isMakingStep = true;
-            List<Vector3Int> positions = new List<Vector3Int>();
-            Vector3Int pos = grid.WorldToCell((Vector2)transform.position + up);
-            if (GameLogic.Instance.IsWalkableTile(pos, true))
-            {
-                positions.Add(pos);
-            }
-            pos = grid.WorldToCell((Vector2)transform.position + down);
-            if (GameLogic.Instance.IsWalkableTile(pos, true))
-            {
-                positions.Add(pos);
-            }
-            pos = grid.WorldToCell((Vector2)transform.position + left);
-            if (GameLogic.Instance.IsWalkableTile(pos, true))
-            {
-                positions.Add(pos);
-            }
-            pos = grid.WorldToCell((Vector2)transform.position + right);
-            if (GameLogic.Instance.IsWalkableTile(pos, true))
-            {
-                positions.Add(pos);
-            }
 
-            Vector3Int tileCell = positions[rng.Next(0, positions.Count)];
-            Vector2 direction = grid.CellToWorld(tileCell) - transform.position;
-            StartCoroutine(StartMoving(direction));
-        }
-    }
-
-    internal IEnumerator StartMovingToPlayer()
-    {
-        List<Vector3Int> movements = GameLogic.Instance.GridPathPositions;
-
-        int i = 0;
-        bool canReachTile = true;
-        while (i < movements.Count && canReachTile)
-        {
-            canReachTile = isTileReachable(movements[i]);
-            yield return new WaitUntil(() => !isMakingStep);
-            Vector2 currentPosition = transform.position;
-            Vector2 nextPosition = grid.GetCellCenterWorld(movements[i]);
-            StartMovingRoutine(nextPosition - currentPosition, false);
-            i++;
-        }
-        isMoving = false;
-    }
-
-    public void UpdateSpriteRenderer()
-    {
-        UpdateSpriteRenderer(grid.WorldToCell(transform.position));
-    }
-    private void UpdateSpriteRenderer(Vector3Int gridPosition)
-    {
-        var color = this.spriteRenderer.color;
-        color.a = Mathf.Min(2f * (1f - this.gridShadowController.GetAlphaAt(gridPosition)), 1f);
-
-        if (this.interpolateAlphaCoroutine != null)
-        {
-            StopCoroutine(this.interpolateAlphaCoroutine);
-        }
-        this.interpolateAlphaCoroutine = StartCoroutine(InterpolateSpriteRendererAlpha(color));
-    }
-
-    private IEnumerator InterpolateSpriteRendererAlpha(Color targetColor)
-    {
-        var animateFor = 0.5f;
-        var animateTime = 0f;
-        var color = this.spriteRenderer.color;
-        if (color == targetColor) yield break;
-
-        while (animateTime < animateFor)
-        {
-            color = Color.Lerp(color, targetColor, animateTime/animateFor);
-            this.spriteRenderer.sortingOrder = color.a > 0f ? 6 : 4;
-            this.spriteRenderer.color = color;
-            animateTime += Time.deltaTime;
-            yield return null;
-        }
-        this.spriteRenderer.color = targetColor;
-    }
-
-    internal bool isTileReachable(Vector3Int position)
-    {
-        return movementGrid.IsWalkable(position);
-    }
-
-
-    private IEnumerator StartMoving(Vector2 direction)
+    protected virtual IEnumerator StartMoving(Vector2 direction)
     {
         float elapsedTime = 0;
         SetSprite(direction);
@@ -171,16 +71,10 @@ public class GridMovement : MonoBehaviour
         }
 
         transform.position = targetPosition;
-        isMakingStep = false;
-
-        if (!this.isEnemy)
-        {
-            gridShadowController.ApplyLight(targetPosition);
-        }
-        //UpdateSpriteRenderer(grid.WorldToCell(targetPosition));
+        IsMakingStep = false;
     }
 
-    private IEnumerator StartMovingBackAndForth(Vector2 direction)
+    protected virtual IEnumerator StartMovingBackAndForth(Vector2 direction)
     {
         float elapsedTime = 0;
         SetSprite(direction);
@@ -201,17 +95,12 @@ public class GridMovement : MonoBehaviour
             yield return null;
         }
         transform.position = originalPosition;
-        isMakingStep = false;
+        IsMakingStep = false;
 
-        if (!this.isEnemy)
-        {
-            GameLogic.Instance.UpdateAllSprites();
-        }
+        GameLogic.Instance.UpdateAllEnemySprites();
     }
 
-
-
-    private void SetSprite(Vector2 direction)
+    protected void SetSprite(Vector2 direction)
     {
         if (direction == up)
         {
@@ -243,18 +132,18 @@ public class GridMovement : MonoBehaviour
 
     public void SetMovementGridActive(bool active)
     {
-        movementGrid.gameObject.SetActive(active);
+        grid.gameObject.SetActive(active);
     }
 
-    public void ShowMovementGrid(int radius)
+    public virtual void ShowGrid(int radius)
     {
-        movementGrid.OnShowGrid(transform.position, radius, isEnemy);
+        grid.OnShowGrid(transform.position, radius, false);
     }
 
 
-    internal void HideMovementGrid()
+    internal void HideGrid()
     {
-        movementGrid.HideGrid();
+        grid.HideGrid();
     }
 
     public void MoveUp(bool isMovingFreely)

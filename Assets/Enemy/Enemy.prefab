@@ -138,8 +138,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5423046256619331758}
   - component: {fileID: 5423046256619331757}
-  - component: {fileID: 5423046256619331756}
   - component: {fileID: 119606172}
+  - component: {fileID: 7740842921214145402}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -175,32 +175,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 132898e131c5bc14f92320972bc0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detectionRadius: 3
+  Id: 0
   dice: {fileID: 5423046255010193801}
   isMoving: 0
   isDoneWithTurn: 1
   isDiceDoneRolling: 1
---- !u!114 &5423046256619331756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5423046256619331755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c2e486eefeecfb4eae615dc3e2d4ff1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveTime: 0.2
-  isMakingStep: 0
-  isMoving: 0
-  movementGridPrefab: {fileID: 6289673837528076871, guid: 9ad471b085becac41805640706e70b05, type: 3}
-  spriteRenderer: {fileID: 5423046254870557224}
-  spriteUp: {fileID: 5442171335384024621, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
-  spriteLeft: {fileID: 5442171335384024621, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
-  spriteDown: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
-  spriteRight: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
-  isEnemy: 0
 --- !u!58 &119606172
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -217,3 +197,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.2
+--- !u!114 &7740842921214145402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5423046256619331755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de7f50c0f6322ee4d90a38a08f5cd099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementGridPrefab: {fileID: 6289673837528076871, guid: 9ad471b085becac41805640706e70b05, type: 3}
+  IsMakingStep: 0
+  IsMoving: 0
+  spriteUp: {fileID: 5442171335384024621, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
+  spriteLeft: {fileID: 5442171335384024621, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
+  spriteDown: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}
+  spriteRight: {fileID: 3739593667183049827, guid: 2104358c3df0b414ebe5f3f8704019ad, type: 3}

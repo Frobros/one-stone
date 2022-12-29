@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,7 +16,7 @@ public enum InputMode
 public class PlayerLink : MonoBehaviour
 {
     public Dice dice;
-    private GridMovement movement;
+    private GridMovementPlayer movement;
 
     private PlayerInput playerInput;
     private InputActionMap movementActionMap;
@@ -23,14 +24,10 @@ public class PlayerLink : MonoBehaviour
     private bool isDiceDoneRolling = true;
     public InputMode mode;
 
-    private void Awake()
-    {
-    }
-
     public void Initialize()
     {
         InitializeMovement();
-        movement = GetComponent<GridMovement>();
+        movement = GetComponent<GridMovementPlayer>();
         movement.Initialize();
         transform.position = movement.GetGridCenterPosition(transform.position);
     }
@@ -49,7 +46,7 @@ public class PlayerLink : MonoBehaviour
             isDiceDoneRolling = !dice.IsRolling;
             if (isDiceDoneRolling)
             {
-                movement.ShowMovementGrid(dice.DiceValue);
+                movement.ShowGrid(dice.DiceValue);
                 GameLogic.Instance.SwitchToPlayerMoveMode();
             }
         }
@@ -63,6 +60,11 @@ public class PlayerLink : MonoBehaviour
             rollingDiceActionMap.Disable();
             movementActionMap.Enable();
         }
+    }
+
+    internal float GetShadowAlphaAt(Vector3Int gridPosition)
+    {
+        return this.movement.GetShadowAlphaAt(gridPosition);
     }
 
     public void SwitchToMoveMode()
@@ -99,13 +101,11 @@ public class PlayerLink : MonoBehaviour
     {
         isDiceDoneRolling = false;
         dice.OnRollDice();
-        GameLogic.Instance.OnPlayerRollDice();
     }
     public void OnPlace(InputAction.CallbackContext context)
     {
         if (!context.started) return;
         
-        Debug.Log("OnPlace");
         if (mode == InputMode.MOVE)
         {
             movement.SetMovementGridActive(false);
@@ -138,7 +138,7 @@ public class PlayerLink : MonoBehaviour
         if (direction != Vector2.zero)
         {
             bool isMovingFreely = mode == InputMode.MOVE_FREELY;
-            if (isMovingFreely && !movement.isMakingStep)
+            if (isMovingFreely && !movement.IsMakingStep)
             {
                 GameLogic.Instance.InitializeMoveAllEnemiesRandom();
             }

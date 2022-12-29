@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using System;
 
 public class MovementGrid : MonoBehaviour
 {
     public TileBase tile;
     private Tilemap tilemap;
-    public bool isEnemy;
     private void Awake()
     {
-        tilemap = GetComponent<Tilemap>();
+        this.tilemap = GetComponent<Tilemap>();
+        this.transform.parent = FindObjectOfType<Grid>().transform;
     }
 
     public void OnShowGrid(Vector3 position, int radius, bool isEnemy)
     {
-        tilemap.gameObject.SetActive(true);
-        tilemap.ClearAllTiles();
+        this.tilemap.gameObject.SetActive(true);
+        this.tilemap.ClearAllTiles();
         Vector3Int playerPositionInGrid = tilemap.WorldToCell(position);
         HashSet<Vector3Int> pointSet = new HashSet<Vector3Int>();
         pointSet.Add(playerPositionInGrid);
@@ -53,28 +54,53 @@ public class MovementGrid : MonoBehaviour
 
         foreach (Vector3Int point in pointSet)
         {
-            tilemap.SetTile(point, tile);
+            this.tilemap.SetTile(point, tile);
         }
     }
 
-    internal void HideGrid()
+    public Vector2 GetCellCenterWorld(Vector3Int cellIndex)
     {
-        tilemap.gameObject.SetActive(false);
+        return this.tilemap.GetCellCenterWorld(cellIndex);
+    }
+
+    public Vector2 GetCellSize()
+    {
+        return this.tilemap.cellSize;
+    }
+
+    public void HideGrid()
+    {
+        this.tilemap.gameObject.SetActive(false);
     }
     
     public Vector3Int GetGridCelll(Vector3 position)
     {
-        return tilemap.WorldToCell(position);
+        return this.tilemap.WorldToCell(position);
     }
 
 
     public Vector3 GetGridCenterPosition(Vector3Int position)
     {
-        return tilemap.CellToWorld(position) + 0.5f * tilemap.cellSize;
+        return this.tilemap.CellToWorld(position) + 0.5f * tilemap.cellSize;
     }
 
-    internal bool IsWalkable(Vector3Int tileCell)
+    public bool IsWalkable(Vector3Int cellIndex)
     {
-        return tilemap.GetTile(tileCell) != null;
+        return this.tilemap.GetTile(cellIndex) != null;
+    }
+
+    public Vector3Int WorldToCell(Vector3 position)
+    {
+        return this.tilemap.WorldToCell(position);
+    }
+
+    public Vector3 CellToWorld(Vector3Int cellIndex)
+    {
+        return this.tilemap.CellToWorld(cellIndex);
+    }
+
+    public bool IsCellInGrid(Vector3Int playerCell)
+    {
+        return this.tilemap.GetTile(playerCell) != null;
     }
 }

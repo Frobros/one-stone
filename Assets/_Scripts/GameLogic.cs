@@ -58,13 +58,19 @@ public class GameLogic : MonoBehaviour
     {
         isReloading = false;
         scenePlayer = FindObjectOfType<PlayerLink>();
-        scenePlayer.Initialize();
         sceneCamera = FindObjectOfType<FollowTarget>();
         sceneGridTerrainManager = FindObjectOfType<GridTerrainManager>();
-        sceneEnemies = sceneGridTerrainManager.enemies;
-
         LoadLevel(levelWhenReload);
+
+        scenePlayer.Initialize();
+        sceneEnemies = sceneGridTerrainManager.enemies;
+        foreach(var enemy in sceneEnemies)
+        {
+            enemy.Initialize();
+        }
+
         SwitchToPlayerMoveFreelyMode();
+        FindObjectOfType<UIManager>().Initialize();
     }
 
     internal void PaintPath(GridPathNode currentNode)
@@ -72,14 +78,13 @@ public class GameLogic : MonoBehaviour
         sceneGridTerrainManager.PaintPath(currentNode);
     }
 
-    // maybe public for loading new levels during gameplay
+    // Is also used when pressing R key
     private void LoadLevel(int level)
     {
         sceneGridTerrainManager.LoadTerrainForLevel(level);
     }
 
     #endregion Initialization
-
 
     public void SetPlayerPosition(Vector3Int tilePosition)
     {
@@ -101,13 +106,18 @@ public class GameLogic : MonoBehaviour
         sceneCamera.Target = scenePlayer.transform;
         scenePlayer.SwitchToMoveFreelyMode();
         uiManager.OnPlayerMoveFreely();
+        foreach (var enemy in sceneEnemies)
+        {
+            enemy.SwitchToDetectionGrid();
+        }
+        sceneGridTerrainManager.ClearPathFindingTilemap();
     }
 
-    internal void UpdateAllSprites()
+    internal void UpdateAllEnemySprites()
     {
         foreach (var enemy in sceneEnemies)
         {
-            enemy.GetComponent<GridMovement>().UpdateSpriteRenderer();
+            enemy.UpdateSpriteRenderer();
         }
     }
 
@@ -116,9 +126,9 @@ public class GameLogic : MonoBehaviour
         return GridTerrainManager.IsBaseTile(cell);
     }
 
-    public bool IsWalkableTile(Vector3Int neighbourAt, bool v = false)
+    public bool IsWalkableTile(Vector3Int neighbourAt, bool isEnemy = false)
     {
-        return sceneGridTerrainManager.IsWalkableTile(neighbourAt, v);
+        return sceneGridTerrainManager.IsWalkableTile(neighbourAt, isEnemy);
     }
 
     public void SwitchToPlayerRollDiceMode()
@@ -126,17 +136,16 @@ public class GameLogic : MonoBehaviour
         sceneCamera.Target = scenePlayer.transform;
         scenePlayer.SwitchToRollDiceMode();
         uiManager.OnWaitForPlayerDiceRoll();
+        foreach (var enemy in sceneEnemies)
+        {
+            enemy.SwitchToMovementGrid();
+        }
     }
 
     public void SwitchToPlayerMoveMode()
     {
         scenePlayer.SwitchToMoveMode();
         uiManager.OnPlayerMove();
-    }
-
-    public void OnPlayerRollDice()
-    {
-
     }
 
     #region Enemy

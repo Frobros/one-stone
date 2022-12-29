@@ -5,9 +5,9 @@ using UnityEngine;
 public class FollowTarget : MonoBehaviour
 {
     public Transform Target;
-    public float speed;
+    public float Speed;
 
-    private void Awake()
+    private void Start()
     {
         Vector3 targetPosition = Target.position;
         targetPosition.z = transform.position.z;
@@ -19,7 +19,7 @@ public class FollowTarget : MonoBehaviour
         {
             Vector3 targetPosition = Target.position;
             targetPosition.z = transform.position.z;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * speed);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * Speed);
         }
     }
 }

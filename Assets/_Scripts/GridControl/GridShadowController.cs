@@ -28,11 +28,11 @@ public class GridShadowController : MonoBehaviour
             }
         }
         Vector3 playerPos = FindObjectOfType<PlayerLink>().transform.position;
-        ApplyLight(playerPos);
+        UpdateShadow(playerPos);
     }
 
 
-    public void ApplyLight(Vector3 playerPosition)
+    public void UpdateShadow(Vector3 playerPosition)
     {
         var currentPlayerPosition = shadowTilemap.WorldToCell(playerPosition);
 
@@ -75,7 +75,6 @@ public class GridShadowController : MonoBehaviour
             .ForEach(x => this.shadowTilemap.SetColor(x.gridPosition, Color.black));
 
         this.currentShadowNodes = nextShadowNodes;
-        GameLogic.Instance.UpdateAllSprites();
     }
 
     public float GetAlphaAt(Vector3Int _gridPosition)

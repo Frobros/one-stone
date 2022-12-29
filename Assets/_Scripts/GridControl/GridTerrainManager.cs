@@ -47,7 +47,6 @@ public class GridTerrainManager : MonoBehaviour
                 }
             }
         }
-        FindObjectOfType<GridShadowController>().Init(GetLevelBounds());
     }
 
     public BoundsInt GetLevelBounds()
@@ -100,6 +99,11 @@ public class GridTerrainManager : MonoBehaviour
             pathFindingTilemap.SetTile(node.position, pathfindingTileCurrent);
             node = node.previous;
         }
+    }
+
+    internal void ClearPathFindingTilemap()
+    {
+        pathFindingTilemap.ClearAllTiles();
     }
 
     private void SetTile(GridCellTerrainType terrainType, int row, int column)

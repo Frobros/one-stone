@@ -123,17 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &96208406 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4605368625561628739, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-  m_PrefabInstance: {fileID: 390655706}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ea2145756d606c4b91bcb82b8057964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &266608535 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1022033372372489532, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
@@ -183,78 +172,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 363368151, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_BodyType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 363368151, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
-      value: 6760e68a-267c-41ab-978b-bd4ce539d53a
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_ActionId
-      value: 99d66521-51da-46f2-93be-2c39506dad23
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_ActionId
-      value: 97289e3e-ce37-4dd0-97a1-bb8b5c6c42d1
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
-      value: Title/StartGame[/Keyboard/space,/Keyboard/enter]
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_ActionName
-      value: ThrowDice/Reload[/Keyboard/r]
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[7].m_ActionName
-      value: EnemyEncounter/Reload[/Keyboard/r]
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 96208406}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnReload
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerLink, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 970183401038960453, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 1022033370557515924, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
-      propertyPath: m_SortingOrder
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 1022033372372489522, guid: 2588d53940432ea4286f3873cc0fa186, type: 3}
       propertyPath: m_Name
       value: Player
@@ -345,7 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 266608535}
-  speed: 5
+  Speed: 0.5
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

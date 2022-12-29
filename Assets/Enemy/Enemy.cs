@@ -6,19 +6,22 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private static int currentId = 0;
+    [SerializeField] private int detectionRadius;
+    public int DetectionRadius { get { return detectionRadius; } } 
     public int Id;
-    private GridMovement movement;
+    private GridMovementEnemy movement;
     public Dice dice;
     public bool isMoving = false;
     public bool isDoneWithTurn = true;
     public bool isDiceDoneRolling = true;
     private bool isCalculatingPath;
 
-    private void Awake()
+    public void Initialize()
     {
         Id = currentId++;
-        movement = GetComponent<GridMovement>();
+        movement = GetComponent<GridMovementEnemy>();
         movement.Initialize();
+        movement.ShowGrid(detectionRadius);
     }
 
     private void Update()
@@ -26,7 +29,7 @@ public class Enemy : MonoBehaviour
         if (!isDiceDoneRolling && !dice.IsRolling)
         {
             isDiceDoneRolling = true;
-            movement.ShowMovementGrid(dice.DiceValue);
+            movement.ShowGrid(dice.DiceValue);
             FindPathToPlayer();
         }
 
@@ -37,23 +40,22 @@ public class Enemy : MonoBehaviour
             InitMoveToPlayer();
         }
 
-        if (!isDoneWithTurn && !movement.isMoving)
+        if (!isDoneWithTurn && !movement.IsMoving)
         {
             isDoneWithTurn = true;
-            movement.HideMovementGrid();
+            movement.HideGrid();
             GameLogic.Instance.NextEnemyRollDice();
         }
     }
 
-
-    internal void OnRollDice()
+    public void OnRollDice()
     {
         GameLogic.Instance.SetEnemyDice(dice);
         dice.OnRollDice();
         isDiceDoneRolling = false;
     }
 
-    internal void FindPathToPlayer()
+    public void FindPathToPlayer()
     {
         Grid grid = FindObjectOfType<Grid>();
         Vector3 from = transform.position;
@@ -62,15 +64,30 @@ public class Enemy : MonoBehaviour
         isCalculatingPath = true;
     }
 
-    internal void InitMoveToPlayer()
+    public void InitMoveToPlayer()
     {
-        movement.isMoving = true;
+        movement.IsMoving = true;
         isDoneWithTurn = false;
-        StartCoroutine(movement.StartMovingToPlayer());
+        StartCoroutine(movement.StartMovingToPlayer(dice.DiceValue));
     }
 
-    internal void InitRandomMove()
+    public void InitRandomMove()
     {
         movement.StartMovingRandomly();
+    }
+
+    public void UpdateSpriteRenderer()
+    {
+        movement.UpdateSpriteRenderer();
+    }
+
+    public void SwitchToMovementGrid()
+    {
+        movement.SwitchToMovementGrid();
+    }
+
+    public void SwitchToDetectionGrid()
+    {
+        movement.SwitchToDetectionGrid();
     }
 }
