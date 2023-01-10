@@ -6,9 +6,8 @@ using TMPro;
 public class DiceUI : MonoBehaviour
 {
     public TextMeshProUGUI diceValueText;
-    public Dice dice;
+    private Dice dice;
     public Dice Dice { get { return dice; } }
-
 
     public void SetDice(Dice _dice)
     {

@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     public bool isDoneWithTurn = true;
     public bool isDiceDoneRolling = true;
     private bool isCalculatingPath;
+    private Vector3Int startPosition;
 
     public void Initialize()
     {
@@ -22,18 +23,21 @@ public class Enemy : MonoBehaviour
         movement = GetComponent<GridMovementEnemy>();
         movement.Initialize();
         movement.ShowGrid(detectionRadius);
+        startPosition = movement.WorldToCell(transform.position);
+    }
+
+    private void OnEnable()
+    {
+        dice.DoneRolling += FindPathToPlayer;
+    }
+
+    private void OnDisable()
+    {
+        dice.DoneRolling -= FindPathToPlayer;
     }
 
     private void Update()
     {
-        if (!isDiceDoneRolling && !dice.IsRolling)
-        {
-            isDiceDoneRolling = true;
-            movement.ShowGrid(dice.DiceValue);
-            FindPathToPlayer();
-        }
-
-
         if (isCalculatingPath && !GameLogic.Instance.IsCalculatingPath)
         {
             isCalculatingPath = false;
@@ -57,6 +61,7 @@ public class Enemy : MonoBehaviour
 
     public void FindPathToPlayer()
     {
+        movement.ShowGrid(dice.DiceValue);
         Grid grid = FindObjectOfType<Grid>();
         Vector3 from = transform.position;
         Vector3 to = FindObjectOfType<PlayerLink>().transform.position;

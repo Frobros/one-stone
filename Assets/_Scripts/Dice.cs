@@ -41,6 +41,8 @@ public class Dice : MonoBehaviour
     [SerializeField] private float rollTime;
 	[SerializeField] private int diceValue;
 	public int DiceValue { get { return diceValue; } }
+	public delegate void DoneRollingHandler();
+	public event DoneRollingHandler DoneRolling;
 
 	public bool CompareIfGreater(Dice other)
     {
@@ -49,11 +51,7 @@ public class Dice : MonoBehaviour
 
 	public void OnRollDice()
     {
-		if (!isRolling)
-        {
-			isRolling = true;
-			StartCoroutine(StartRollDice());
-        }
+		StartCoroutine(StartRollDice());
     }
 
 	private IEnumerator StartRollDice()
@@ -72,7 +70,7 @@ public class Dice : MonoBehaviour
 			elapsedTime += Time.deltaTime;
 			yield return null;
         }
-		isRolling = false;
+		DoneRolling?.Invoke();
 	}
     #endregion
 }
