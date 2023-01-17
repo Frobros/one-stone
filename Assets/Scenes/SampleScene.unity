@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1816f6e86ce9fb4282f40bcba8d3a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelWhenReload: 0
+  levelWhenReload: 2
   currentEnemy: 0
 --- !u!114 &1183812513
 MonoBehaviour:
@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3fbf4aaaba351e438e172949eb2ff43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 1
+  currentLevel: 2
 --- !u!114 &1183812515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -780,7 +780,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceValueText: {fileID: 2006742577}
-  dice: {fileID: 0}
 --- !u!114 &2006742577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,7 +1065,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceValueText: {fileID: 2119819781}
-  dice: {fileID: 0}
 --- !u!114 &2119819781
 MonoBehaviour:
   m_ObjectHideFlags: 0

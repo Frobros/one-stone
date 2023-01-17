@@ -36,6 +36,7 @@ public class GridMovementPlayer : GridMovement
 
     public override void ShowGrid(int radius)
     {
+        Debug.Log("Show Grid");
         grid.OnShowGrid(transform.position, radius, false);
     }
 

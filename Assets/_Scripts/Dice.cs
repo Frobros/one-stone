@@ -27,8 +27,6 @@ using TMPro;
 public class Dice : MonoBehaviour
 {
 	private static RNG rng;
-    private bool isRolling;
-	public bool IsRolling { get { return isRolling; } }
 	private void Awake()
 	{
 		if (rng == null)
@@ -43,6 +41,7 @@ public class Dice : MonoBehaviour
 	public int DiceValue { get { return diceValue; } }
 	public delegate void DoneRollingHandler();
 	public event DoneRollingHandler DoneRolling;
+	private Coroutine rollDiceCoroutine;
 
 	public bool CompareIfGreater(Dice other)
     {
@@ -51,7 +50,11 @@ public class Dice : MonoBehaviour
 
 	public void OnRollDice()
     {
-		StartCoroutine(StartRollDice());
+		if (rollDiceCoroutine != null)
+        {
+			StopCoroutine(rollDiceCoroutine);
+        }
+		rollDiceCoroutine = StartCoroutine(StartRollDice());
     }
 
 	private IEnumerator StartRollDice()

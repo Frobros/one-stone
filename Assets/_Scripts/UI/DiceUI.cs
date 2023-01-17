@@ -25,9 +25,4 @@ public class DiceUI : MonoBehaviour
             diceValueText.text = dice.DiceValue.ToString();
         }
     }
-
-    public void OnRollDice()
-    {
-        dice.OnRollDice();
-    }
 }

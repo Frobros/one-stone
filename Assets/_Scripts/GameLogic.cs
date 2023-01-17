@@ -1,8 +1,15 @@
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System;
+
+public enum GameMode
+{
+    PLAYER_MOVE_FREELY,
+    PLAYER_ROLL_DICE,
+    ENEMY_ROLL_DICE,
+    PLAYER_MOVE_DICE_ROLL,
+    ENEMY_MOVE_DICE_ROLL
+}
 
 public class GameLogic : MonoBehaviour
 {
@@ -15,6 +22,7 @@ public class GameLogic : MonoBehaviour
     private GridTerrainManager sceneGridTerrainManager;
     public GridTerrainManager GridTerrainManager { get { return sceneGridTerrainManager; } }
     private List<Enemy> sceneEnemies;
+    private List<Enemy> encounteredEnemies = new List<Enemy>();
     private FollowTarget sceneCamera;
     public int levelWhenReload = 0;
 
@@ -56,6 +64,7 @@ public class GameLogic : MonoBehaviour
 
     private void Initialize()
     {
+        encounteredEnemies.Clear();
         isReloading = false;
         scenePlayer = FindObjectOfType<PlayerLink>();
         sceneCamera = FindObjectOfType<FollowTarget>();
@@ -69,7 +78,7 @@ public class GameLogic : MonoBehaviour
             enemy.Initialize();
         }
 
-        SwitchToPlayerMoveFreelyMode();
+        SwitchMode(GameMode.PLAYER_MOVE_FREELY);
         FindObjectOfType<UIManager>().Initialize();
     }
 
@@ -101,18 +110,6 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    public void SwitchToPlayerMoveFreelyMode()
-    {
-        sceneCamera.Target = scenePlayer.transform;
-        scenePlayer.SwitchToMoveFreelyMode();
-        uiManager.OnPlayerMoveFreely();
-        foreach (var enemy in sceneEnemies)
-        {
-            enemy.SwitchToDetectionGrid();
-        }
-        sceneGridTerrainManager.ClearPathFindingTilemap();
-    }
-
     internal void UpdateAllEnemySprites()
     {
         foreach (var enemy in sceneEnemies)
@@ -131,21 +128,67 @@ public class GameLogic : MonoBehaviour
         return sceneGridTerrainManager.IsWalkableTile(neighbourAt, isEnemy);
     }
 
-    public void SwitchToPlayerRollDiceMode()
+    public void SwitchMode(GameMode mode)
     {
-        sceneCamera.Target = scenePlayer.transform;
-        scenePlayer.SwitchToRollDiceMode();
-        uiManager.OnWaitForPlayerDiceRoll();
-        foreach (var enemy in sceneEnemies)
+        switch (mode)
         {
-            enemy.SwitchToMovementGrid();
+            case GameMode.PLAYER_MOVE_FREELY:
+                sceneCamera.Target = scenePlayer.transform;
+                scenePlayer.SwitchToMoveFreelyMode();
+                uiManager.OnPlayerMoveFreely();
+                foreach (var enemy in sceneEnemies)
+                {
+                    enemy.SwitchToDetectionGrid();
+                }
+                sceneGridTerrainManager.ClearPathFindingTilemap();
+                break;
+            case GameMode.PLAYER_ROLL_DICE:
+                currentEnemy = 0;
+                sceneCamera.Target = scenePlayer.transform;
+                scenePlayer.SwitchToRollDiceMode();
+                uiManager.OnWaitForPlayerDiceRoll();
+                foreach (var enemy in sceneEnemies)
+                {
+                    enemy.SwitchToMovementGrid();
+                }
+                break;
+            case GameMode.PLAYER_MOVE_DICE_ROLL:
+                scenePlayer.SwitchToMoveMode();
+                uiManager.OnPlayerMove();
+                break;
+            case GameMode.ENEMY_ROLL_DICE:
+                if (encounteredEnemies.Count == 0)
+                {
+                    Debug.LogWarning("No enemies present!");
+                    SwitchMode(GameMode.PLAYER_MOVE_FREELY);
+                    return;
+                }
+
+                if (currentEnemy >= encounteredEnemies.Count)
+                {
+                    Debug.Log("Players Turn!");
+                    SwitchMode(GameMode.PLAYER_ROLL_DICE);
+                    return;
+                }
+
+                var nextEnemy = encounteredEnemies[currentEnemy];
+                sceneCamera.Target = nextEnemy.transform;
+                uiManager.OnEnemyRollDice(nextEnemy);
+                nextEnemy.OnRollDice();
+
+                currentEnemy++;
+                break;
+            default:
+                break;
         }
     }
 
-    public void SwitchToPlayerMoveMode()
+    public void AddEnemyToEncounter(Enemy _enemy)
     {
-        scenePlayer.SwitchToMoveMode();
-        uiManager.OnPlayerMove();
+        if (_enemy != null && !encounteredEnemies.Contains(_enemy))
+        {
+            encounteredEnemies.Add(_enemy);
+        }
     }
 
     #region Enemy
@@ -159,39 +202,6 @@ public class GameLogic : MonoBehaviour
     }
 
     public int currentEnemy = 0;
-
-    public void SwitchToEnemyRollDiceMode()
-    {
-        currentEnemy = 0;
-
-        if (currentEnemy >= sceneEnemies.Count)
-        {
-            Debug.LogWarning("No enemies present!");
-            SwitchToPlayerRollDiceMode();
-            return;
-        }
-        var firstEnemy = sceneEnemies[currentEnemy];
-        sceneCamera.Target = firstEnemy.transform;
-        uiManager.OnEnemyRollDice(firstEnemy);
-        firstEnemy.OnRollDice();
-    }
-
-    public void NextEnemyRollDice()
-    {
-        currentEnemy++;
-
-        if (currentEnemy >= sceneEnemies.Count)
-        {
-            SwitchToPlayerRollDiceMode();
-            return;
-        }
-
-
-        var nextEnemy = sceneEnemies[currentEnemy];
-        sceneCamera.Target = nextEnemy.transform;
-        uiManager.OnEnemyRollDice(nextEnemy);
-        nextEnemy.OnRollDice();
-    }
 
     public void SetEnemyDice(Dice dice)
     {

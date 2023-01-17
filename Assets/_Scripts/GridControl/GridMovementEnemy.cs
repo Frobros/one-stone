@@ -143,7 +143,6 @@ public class GridMovementEnemy : GridMovement
         if (!isPlayerDetected)
         {
             ShowGrid(enemy.DetectionRadius);
-            CheckIsPlayerInRange();
         }
     }
 
@@ -158,7 +157,7 @@ public class GridMovementEnemy : GridMovement
         var playerCell = grid.WorldToCell(playerPosition);
         if (grid.IsCellInGrid(playerCell))
         {
-            GameLogic.Instance.SwitchToPlayerRollDiceMode();
+            GameLogic.Instance.AddEnemyToEncounter(this.enemy);
         }
     }
 }

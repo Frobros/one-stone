@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -48,7 +45,7 @@ public class Enemy : MonoBehaviour
         {
             isDoneWithTurn = true;
             movement.HideGrid();
-            GameLogic.Instance.NextEnemyRollDice();
+            GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
         }
     }
 

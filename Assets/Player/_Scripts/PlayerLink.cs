@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
 
 public enum InputMode
 {
@@ -21,8 +18,17 @@ public class PlayerLink : MonoBehaviour
     private PlayerInput playerInput;
     private InputActionMap movementActionMap;
     private InputActionMap rollingDiceActionMap;
-    private bool isDiceDoneRolling = true;
     public InputMode mode;
+
+    private void OnEnable()
+    {
+        dice.DoneRolling += OnDoneRolling;
+    }
+
+    private void OnDisable()
+    {
+        dice.DoneRolling -= OnDoneRolling;
+    }
 
     public void Initialize()
     {
@@ -37,19 +43,6 @@ public class PlayerLink : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         movementActionMap = playerInput.actions.FindActionMap("Move");
         rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
-    }
-        
-    private void Update()
-    {
-        if (!isDiceDoneRolling)
-        {
-            isDiceDoneRolling = !dice.IsRolling;
-            if (isDiceDoneRolling)
-            {
-                movement.ShowGrid(dice.DiceValue);
-                GameLogic.Instance.SwitchToPlayerMoveMode();
-            }
-        }
     }
 
     internal void SwitchToMoveFreelyMode()
@@ -99,9 +92,15 @@ public class PlayerLink : MonoBehaviour
 
     public void OnRollDice()
     {
-        isDiceDoneRolling = false;
         dice.OnRollDice();
     }
+
+    public void OnDoneRolling()
+    {
+        movement.ShowGrid(dice.DiceValue);
+        GameLogic.Instance.SwitchMode(GameMode.PLAYER_MOVE_DICE_ROLL);
+    }
+
     public void OnPlace(InputAction.CallbackContext context)
     {
         if (!context.started) return;
@@ -113,18 +112,20 @@ public class PlayerLink : MonoBehaviour
             var cell = movement.WorldToCell(transform.position);
             if (GameLogic.Instance.IsBaseTile(cell))
             {
-                GameLogic.Instance.SwitchToPlayerMoveFreelyMode();
+                GameLogic.Instance.SwitchMode(GameMode.PLAYER_MOVE_FREELY);
             }
             else
             {
-                GameLogic.Instance.SwitchToEnemyRollDiceMode();
+                GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
             }
         }
+        /*
         else if (mode == InputMode.MOVE_FREELY)
         {
             movement.SetMovementGridActive(false);
             GameLogic.Instance.SwitchToPlayerRollDiceMode();
         }
+        */
     }
 
     public void OnReload()

@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 132898e131c5bc14f92320972bc0ff16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 3
+  detectionRadius: 6
   Id: 0
   dice: {fileID: 5423046255010193801}
   isMoving: 0
