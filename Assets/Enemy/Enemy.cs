@@ -9,10 +9,8 @@ public class Enemy : MonoBehaviour
     private GridMovementEnemy movement;
     public Dice dice;
     public bool isMoving = false;
-    public bool isDoneWithTurn = true;
     public bool isDiceDoneRolling = true;
     private bool isCalculatingPath;
-    private Vector3Int startPosition;
 
     public void Initialize()
     {
@@ -20,17 +18,18 @@ public class Enemy : MonoBehaviour
         movement = GetComponent<GridMovementEnemy>();
         movement.Initialize();
         movement.ShowGrid(detectionRadius);
-        startPosition = movement.WorldToCell(transform.position);
     }
 
     private void OnEnable()
     {
         dice.DoneRolling += FindPathToPlayer;
+        movement.OnDoneMovingToPlayer += OnDoneMoving;
     }
 
     private void OnDisable()
     {
         dice.DoneRolling -= FindPathToPlayer;
+        movement.OnDoneMovingToPlayer -= OnDoneMoving;
     }
 
     private void Update()
@@ -39,13 +38,6 @@ public class Enemy : MonoBehaviour
         {
             isCalculatingPath = false;
             InitMoveToPlayer();
-        }
-
-        if (!isDoneWithTurn && !movement.IsMoving)
-        {
-            isDoneWithTurn = true;
-            movement.HideGrid();
-            GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
         }
     }
 
@@ -66,11 +58,14 @@ public class Enemy : MonoBehaviour
         isCalculatingPath = true;
     }
 
+    public void OnDoneMoving()
+    {
+        GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
+    }
+
     public void InitMoveToPlayer()
     {
-        movement.IsMoving = true;
-        isDoneWithTurn = false;
-        StartCoroutine(movement.StartMovingToPlayer(dice.DiceValue));
+        movement.InitMovingToPlayer(dice.DiceValue);
     }
 
     public void InitRandomMove()

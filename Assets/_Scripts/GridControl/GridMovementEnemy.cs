@@ -9,6 +9,9 @@ public class GridMovementEnemy : GridMovement
     private PlayerLink player;
     private bool isPlayerDetected;
 
+    public delegate void OnDoneMoving();
+    public event OnDoneMoving OnDoneMovingToPlayer;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -17,7 +20,12 @@ public class GridMovementEnemy : GridMovement
         UpdateSpriteRenderer(false);
     }
 
-    public IEnumerator StartMovingToPlayer(int diceValue)
+    public void InitMovingToPlayer(int diceValue)
+    {
+        StartCoroutine(StartMovingToPlayer(diceValue));
+    }
+
+    private IEnumerator StartMovingToPlayer(int diceValue)
     {
         List<Vector3Int> movements = GameLogic.Instance.GridPathPositions;
         int i = 0;
@@ -32,7 +40,8 @@ public class GridMovementEnemy : GridMovement
             StartMovingRoutine(nextPosition - currentPosition, false);
             i++;
         }
-        IsMoving = false;
+        HideGrid();
+        OnDoneMovingToPlayer?.Invoke();
     }
 
     private bool isTileReachable(Vector3Int position)
