@@ -18,7 +18,7 @@ public class PlayerLink : MonoBehaviour
     private PlayerInput playerInput;
     private InputActionMap movementActionMap;
     private InputActionMap rollingDiceActionMap;
-    public InputMode mode;
+    public InputMode inputMode;
 
     private void OnEnable()
     {
@@ -32,59 +32,53 @@ public class PlayerLink : MonoBehaviour
 
     public void Initialize()
     {
-        InitializeMovement();
+        // Initialize inputs
+        playerInput = GetComponent<PlayerInput>();
+        movementActionMap = playerInput.actions.FindActionMap("Move");
+        rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
+
+        // Initialize movement components
         movement = GetComponent<GridMovementPlayer>();
         movement.Initialize();
         transform.position = movement.GetGridCenterPosition(transform.position);
     }
 
-    private void InitializeMovement()
+    public void SwitchGameMode(GameMode gameMode)
     {
-        playerInput = GetComponent<PlayerInput>();
-        movementActionMap = playerInput.actions.FindActionMap("Move");
-        rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
-    }
-
-    internal void SwitchToMoveFreelyMode()
-    {
-        if (mode != InputMode.MOVE_FREELY)
+        switch (gameMode)
         {
-            mode = InputMode.MOVE_FREELY;
-            rollingDiceActionMap.Disable();
-            movementActionMap.Enable();
-        }
-    }
-
-    internal float GetShadowAlphaAt(Vector3Int gridPosition)
-    {
-        return this.movement.GetShadowAlphaAt(gridPosition);
-    }
-
-    public void SwitchToMoveMode()
-    {
-        if (mode != InputMode.MOVE)
-        {
-            mode = InputMode.MOVE;
-            rollingDiceActionMap.Disable();
-            movementActionMap.Enable();
-        }
-    }
-
-    internal void SwitchToRollDiceMode()
-    {
-        if (mode != InputMode.ROLL_DICE)
-        {
-            mode = InputMode.ROLL_DICE;
-            movementActionMap.Disable();
-            rollingDiceActionMap.Enable();
+            case GameMode.PLAYER_MOVE_FREELY:
+                if (inputMode != InputMode.MOVE_FREELY)
+                {
+                    inputMode = InputMode.MOVE_FREELY;
+                    rollingDiceActionMap.Disable();
+                    movementActionMap.Enable();
+                }
+                break;
+            case GameMode.PLAYER_ROLL_DICE:
+                if (inputMode != InputMode.ROLL_DICE)
+                {
+                    inputMode = InputMode.ROLL_DICE;
+                    movementActionMap.Disable();
+                    rollingDiceActionMap.Enable();
+                }
+                break;
+            case GameMode.PLAYER_MOVE_DICE_ROLL:
+                if (inputMode != InputMode.MOVE)
+                {
+                    inputMode = InputMode.MOVE;
+                    rollingDiceActionMap.Disable();
+                    movementActionMap.Enable();
+                }
+                break;
         }
     }
 
     internal void DisableControls()
     {
-        if (mode != InputMode.DISABLED)
+        if (inputMode != InputMode.DISABLED)
         {
-            mode = InputMode.DISABLED;
+            inputMode = InputMode.DISABLED;
             movementActionMap.Disable();
             rollingDiceActionMap.Disable();
         }
@@ -105,7 +99,7 @@ public class PlayerLink : MonoBehaviour
     {
         if (!context.started) return;
         
-        if (mode == InputMode.MOVE)
+        if (inputMode == InputMode.MOVE)
         {
             movement.SetMovementGridActive(false);
             DisableControls();
@@ -119,13 +113,6 @@ public class PlayerLink : MonoBehaviour
                 GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
             }
         }
-        /*
-        else if (mode == InputMode.MOVE_FREELY)
-        {
-            movement.SetMovementGridActive(false);
-            GameLogic.Instance.SwitchToPlayerRollDiceMode();
-        }
-        */
     }
 
     public void OnReload()
@@ -138,7 +125,7 @@ public class PlayerLink : MonoBehaviour
         Vector2 direction = directionValue.ReadValue<Vector2>();
         if (direction != Vector2.zero)
         {
-            bool isMovingFreely = mode == InputMode.MOVE_FREELY;
+            bool isMovingFreely = inputMode == InputMode.MOVE_FREELY;
             if (isMovingFreely && !movement.IsMakingStep)
             {
                 GameLogic.Instance.InitializeMoveAllEnemiesRandom();
@@ -169,5 +156,10 @@ public class PlayerLink : MonoBehaviour
         {
             OnReload();
         }
+    }
+
+    internal float GetShadowAlphaAt(Vector3Int gridPosition)
+    {
+        return this.movement.GetShadowAlphaAt(gridPosition);
     }
 }

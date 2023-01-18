@@ -134,7 +134,7 @@ public class GameLogic : MonoBehaviour
         {
             case GameMode.PLAYER_MOVE_FREELY:
                 sceneCamera.Target = scenePlayer.transform;
-                scenePlayer.SwitchToMoveFreelyMode();
+                scenePlayer.SwitchGameMode(mode);
                 uiManager.OnPlayerMoveFreely();
                 foreach (var enemy in sceneEnemies)
                 {
@@ -145,7 +145,7 @@ public class GameLogic : MonoBehaviour
             case GameMode.PLAYER_ROLL_DICE:
                 currentEnemy = 0;
                 sceneCamera.Target = scenePlayer.transform;
-                scenePlayer.SwitchToRollDiceMode();
+                scenePlayer.SwitchGameMode(mode);
                 uiManager.OnWaitForPlayerDiceRoll();
                 foreach (var enemy in sceneEnemies)
                 {
@@ -153,7 +153,7 @@ public class GameLogic : MonoBehaviour
                 }
                 break;
             case GameMode.PLAYER_MOVE_DICE_ROLL:
-                scenePlayer.SwitchToMoveMode();
+                scenePlayer.SwitchGameMode(mode);
                 uiManager.OnPlayerMove();
                 break;
             case GameMode.ENEMY_ROLL_DICE:
