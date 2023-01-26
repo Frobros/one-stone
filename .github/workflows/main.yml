@@ -108,7 +108,7 @@ jobs:
       - name: Install Butler, zip the build and push it to itch.io
         shell: bash
         env:
-          BUTLER_API_KEY: ${{ secrets.API_KEY }}
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
           cd ~
           echo ------------------------------------------------------------------------
