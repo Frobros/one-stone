@@ -40,8 +40,8 @@ public class GridTerrainManager : MonoBehaviour
                     else if (words[j][1] == 'e')
                     {
                         var gridPosition = new Vector3Int(j, -i, 0);
-
-                        var enemy = Instantiate(enemyPrefab, FindObjectOfType<Grid>().GetCellCenterWorld(gridPosition), Quaternion.identity).GetComponent<Enemy>();
+                        var enemy = Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity, transform).GetComponentInChildren<Enemy>();
+                        enemy.transform.position = FindObjectOfType<Grid>().GetCellCenterWorld(gridPosition);
                         enemies.Add(enemy);
                     }
                 }

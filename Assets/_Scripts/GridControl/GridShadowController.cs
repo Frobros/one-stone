@@ -7,14 +7,13 @@ public class GridShadowController : MonoBehaviour
 {
     public Tilemap shadowTilemap;
     public TileBase shadowTile;
-    private BoundsInt levelBounds;
     public int radius;
     public float PENALTY;
     public List<ShadowNode> currentShadowNodes = new List<ShadowNode>();
 
-    public void Init(BoundsInt _levelBounds)
+    public void Initialize()
     {
-        levelBounds = _levelBounds;
+        var levelBounds = FindObjectOfType<GridTerrainManager>().GetLevelBounds();
         for (int i = levelBounds.xMin; i < levelBounds.xMax; i++)
         {
             for (int j = levelBounds.yMin; j < levelBounds.yMax; j++)

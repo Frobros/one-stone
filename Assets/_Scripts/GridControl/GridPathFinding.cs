@@ -32,7 +32,7 @@ public class GridPathFinding : MonoBehaviour
         int hCost = Mathf.Abs(targetDirection.x) + Mathf.Abs(targetDirection.y);
         GridPathNode currentNode = new GridPathNode(null, fromCell, 0, hCost, hCost);
         float paintInterval = 1f / repeatPerSecond;
-        float time = 0f;
+        //float time = 0f;
         while (currentNode.hCost > 1)
         {
             ExpandNode(currentNode, toCell);
@@ -45,12 +45,12 @@ public class GridPathFinding : MonoBehaviour
                 yield break;
             }
             currentNode = nodes[0];
-            time += Time.deltaTime;
-            if (time >= paintInterval)
-            {
-                GameLogic.Instance.PaintPath(currentNode);
-                time %= paintInterval;
-            }
+            //time += Time.deltaTime;
+            //if (time >= paintInterval)
+            //{
+            //    GameLogic.Instance.PaintPath(currentNode);
+            //    time %= paintInterval;
+            //}
             yield return null;
         }
 

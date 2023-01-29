@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 8616123347729273931}
   - component: {fileID: 636084676441906058}
   m_Layer: 0
-  m_Name: IsoBasePalette
+  m_Name: _TilePalette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,47 +1,31 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GridMovementPlayer : GridMovement
 {
     private GridShadowController gridShadowController;
+
     public override void Initialize()
     {
         base.Initialize();
-        this.gridShadowController = FindObjectOfType<GridShadowController>();
-        var levelBounds = FindObjectOfType<GridTerrainManager>().GetLevelBounds();
-        this.gridShadowController.Init(levelBounds);
-        this.gridShadowController.UpdateShadow(transform.position);
+        gridShadowController = FindObjectOfType<GridShadowController>();
+        gridShadowController.Initialize();
+        gridShadowController.UpdateShadow(transform.position);
     }
-    protected override IEnumerator StartMoving(Vector2 direction)
+
+    public override void HasFinishedStep()
     {
-        float elapsedTime = 0;
-        SetSprite(direction);
-        Vector2 originalPosition = GetGridCenterPosition(transform.position);
-        Vector2 targetPosition = GetGridCenterPosition(transform.position + (Vector3)direction);
-        while (elapsedTime < moveTime)
-        {
-            transform.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime / moveTime);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = targetPosition;
-        IsMakingStep = false;
-
-        this.gridShadowController.UpdateShadow(targetPosition);
+        gridShadowController.UpdateShadow(transform.position);
         GameLogic.Instance.UpdateAllEnemySprites();
+        isMakingStep = false;
     }
 
-    public override void ShowGrid(int radius)
+    public override void ShowMovementGrid(int radius)
     {
-        Debug.Log("Show Grid");
-        grid.OnShowGrid(transform.position, radius, false);
+        grid.OnUpdateMovementGrid(transform.position, radius, false);
     }
 
     internal float GetShadowAlphaAt(Vector3Int gridPosition)
     {
-        return this.gridShadowController.GetAlphaAt(gridPosition);
+        return gridShadowController.GetAlphaAt(gridPosition);
     }
 }

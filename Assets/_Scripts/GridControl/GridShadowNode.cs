@@ -39,6 +39,7 @@ public class ShadowNode
             this.walkCost = _previousWalkCost + penalty;
         }
         this.alpha = this.walkCost / this.maxDistance;
+        this.alpha *= alpha;
     }
 
     public List<ShadowNode> UnfoldNode(float penalty)

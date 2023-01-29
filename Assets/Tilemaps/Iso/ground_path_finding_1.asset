@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: path-finding-tile-0
+  m_Name: ground_path_finding_1
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 5779276551972103038, guid: e66b3bc5c4e91d845b71d4274995a371, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

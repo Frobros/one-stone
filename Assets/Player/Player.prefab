@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 2780192814449194030}
-  mode: 0
+  inputMode: 0
 --- !u!114 &2664771813967811317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,14 +305,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93289fd363b07443a3c5b38f158d885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.2
-  isMakingStep: 0
-  isMoving: 0
-  movementGridPrefab: {fileID: 620413770357628004, guid: 6b145c32dc4b8b1488cfbb52e134fdd2, type: 3}
+  grid: {fileID: 0}
   spriteUp: {fileID: 3963274365136324983, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
   spriteLeft: {fileID: -1395896317315271363, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
   spriteDown: {fileID: -6219055189398801932, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
   spriteRight: {fileID: 4635374456139009237, guid: 0cf1fabb2b86ea54296886c2e6583022, type: 3}
+  IsMoving: 0
 --- !u!1 &6922899742282583833
 GameObject:
   m_ObjectHideFlags: 0

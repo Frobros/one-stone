@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
 
 public enum GameMode
 {
@@ -21,8 +23,8 @@ public class GameLogic : MonoBehaviour
     private GridPathFinding gridPathFinding;
     private GridTerrainManager sceneGridTerrainManager;
     public GridTerrainManager GridTerrainManager { get { return sceneGridTerrainManager; } }
-    private List<Enemy> sceneEnemies;
-    private List<Enemy> encounteredEnemies = new List<Enemy>();
+    public List<Enemy> sceneEnemies;
+    public List<Enemy> encounteredEnemies = new List<Enemy>();
     private FollowTarget sceneCamera;
     public int levelWhenReload = 0;
 
@@ -77,9 +79,8 @@ public class GameLogic : MonoBehaviour
         {
             enemy.Initialize();
         }
-
-        SwitchMode(GameMode.PLAYER_MOVE_FREELY);
         FindObjectOfType<UIManager>().Initialize();
+        SwitchMode(GameMode.PLAYER_MOVE_FREELY);
     }
 
     internal void PaintPath(GridPathNode currentNode)
@@ -99,6 +100,24 @@ public class GameLogic : MonoBehaviour
     {
         Vector3 pos = FindObjectOfType<Grid>().GetCellCenterWorld(tilePosition);
         scenePlayer.transform.position = pos;
+    }
+
+    internal void UpdateEnemyDetection()
+    {
+        for (int i = encounteredEnemies.Count-1; i >= 0; i--)
+        {
+            encounteredEnemies[i].UpdateDetection();
+        }
+    }
+
+    internal void ClearEncounteredEnemies()
+    {
+        encounteredEnemies.Clear();
+    }
+
+    internal bool IsDetectedByAnyEnemy()
+    {
+        return encounteredEnemies.Count > 0;
     }
 
     public void OnReloadScene()
@@ -136,21 +155,12 @@ public class GameLogic : MonoBehaviour
                 sceneCamera.Target = scenePlayer.transform;
                 scenePlayer.SwitchGameMode(mode);
                 uiManager.OnPlayerMoveFreely();
-                foreach (var enemy in sceneEnemies)
-                {
-                    enemy.SwitchToDetectionGrid();
-                }
-                sceneGridTerrainManager.ClearPathFindingTilemap();
                 break;
             case GameMode.PLAYER_ROLL_DICE:
                 currentEnemy = 0;
                 sceneCamera.Target = scenePlayer.transform;
                 scenePlayer.SwitchGameMode(mode);
                 uiManager.OnWaitForPlayerDiceRoll();
-                foreach (var enemy in sceneEnemies)
-                {
-                    enemy.SwitchToMovementGrid();
-                }
                 break;
             case GameMode.PLAYER_MOVE_DICE_ROLL:
                 scenePlayer.SwitchGameMode(mode);
@@ -183,19 +193,28 @@ public class GameLogic : MonoBehaviour
         }
     }
 
+    internal void RemoveEnemyFromEncounter(Enemy enemy)
+    {
+        this.encounteredEnemies.Remove(enemy);
+    }
+
     public void AddEnemyToEncounter(Enemy _enemy)
     {
-        if (_enemy != null && !encounteredEnemies.Contains(_enemy))
+        if (encounteredEnemies.Contains(_enemy)) return;
+        
+        encounteredEnemies.Add(_enemy);
+        if (encounteredEnemies.Count == 1)
         {
-            encounteredEnemies.Add(_enemy);
+            SwitchMode(GameMode.PLAYER_ROLL_DICE);
         }
     }
 
     #region Enemy
 
-    internal void InitializeMoveAllEnemiesRandom()
+    internal void MoveRemainingEnemiesRandomly()
     {
-        foreach (var enemy in sceneGridTerrainManager.enemies)
+        var remainingEnemies = sceneEnemies.Where(x => !encounteredEnemies.Contains(x));
+        foreach (var enemy in remainingEnemies)
         {
             enemy.InitRandomMove(); 
         }

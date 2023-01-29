@@ -4,28 +4,28 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 1104415946980087197
-    second: grount_iso_tile (3)_0
+    second: sheet_ground_0
   - first:
       213: -3351509244510115490
-    second: grount_iso_tile (3)_1
+    second: sheet_ground_1
   - first:
       213: 1281066230663899441
-    second: grount_iso_tile (3)_2
+    second: sheet_ground_2
   - first:
       213: -2580707552429611083
-    second: grount_iso_tile (3)_3
+    second: sheet_ground_4
   - first:
       213: -1077338579629565118
-    second: grount_iso_tile (3)_4
+    second: sheet_ground_3
   - first:
       213: 5779276551972103038
-    second: grount_iso_tile_0
+    second: sheet_ground_5
   - first:
       213: 3190613614195571899
-    second: grount_iso_tile_1
+    second: sheet_ground_7
   - first:
       213: 658434749227538600
-    second: grount_iso_tile_2
+    second: sheet_ground_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -127,7 +127,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: grount_iso_tile (3)_0
+      name: sheet_ground_0
       rect:
         serializedVersion: 2
         x: 0
@@ -148,7 +148,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile (3)_1
+      name: sheet_ground_1
       rect:
         serializedVersion: 2
         x: 64
@@ -169,7 +169,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile (3)_2
+      name: sheet_ground_2
       rect:
         serializedVersion: 2
         x: 128
@@ -190,7 +190,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile (3)_3
+      name: sheet_ground_4
       rect:
         serializedVersion: 2
         x: 192
@@ -211,7 +211,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile (3)_4
+      name: sheet_ground_3
       rect:
         serializedVersion: 2
         x: 128
@@ -232,7 +232,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile_0
+      name: sheet_ground_5
       rect:
         serializedVersion: 2
         x: 192
@@ -253,7 +253,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile_1
+      name: sheet_ground_7
       rect:
         serializedVersion: 2
         x: 256
@@ -274,7 +274,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: grount_iso_tile_2
+      name: sheet_ground_6
       rect:
         serializedVersion: 2
         x: 256
@@ -282,7 +282,7 @@ TextureImporter:
         width: 64
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: grount_iso_tile (2)_0
+  m_Name: ground_flat_1
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -2453194536668148348, guid: 1b8932492d017194f8d8d78c58f87eae, type: 3}
+  m_Sprite: {fileID: 1281066230663899441, guid: e66b3bc5c4e91d845b71d4274995a371, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

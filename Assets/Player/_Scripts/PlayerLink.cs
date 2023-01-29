@@ -91,7 +91,7 @@ public class PlayerLink : MonoBehaviour
 
     public void OnDoneRolling()
     {
-        movement.ShowGrid(dice.DiceValue);
+        movement.ShowMovementGrid(dice.DiceValue);
         GameLogic.Instance.SwitchMode(GameMode.PLAYER_MOVE_DICE_ROLL);
     }
 
@@ -101,18 +101,20 @@ public class PlayerLink : MonoBehaviour
         
         if (inputMode == InputMode.MOVE)
         {
-            movement.SetMovementGridActive(false);
             DisableControls();
+            movement.OnHideMovementGrid();
             var cell = movement.WorldToCell(transform.position);
-            if (GameLogic.Instance.IsBaseTile(cell))
+            GameLogic.Instance.UpdateEnemyDetection();
+            if (GameLogic.Instance.IsBaseTile(cell) || !GameLogic.Instance.IsDetectedByAnyEnemy())
             {
+                GameLogic.Instance.ClearEncounteredEnemies();
                 GameLogic.Instance.SwitchMode(GameMode.PLAYER_MOVE_FREELY);
             }
             else
             {
                 GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
             }
-        }
+        }   
     }
 
     public void OnReload()
@@ -123,30 +125,27 @@ public class PlayerLink : MonoBehaviour
     public void OnMove(InputAction.CallbackContext directionValue)
     {
         Vector2 direction = directionValue.ReadValue<Vector2>();
-        if (direction != Vector2.zero)
-        {
-            bool isMovingFreely = inputMode == InputMode.MOVE_FREELY;
-            if (isMovingFreely && !movement.IsMakingStep)
-            {
-                GameLogic.Instance.InitializeMoveAllEnemiesRandom();
-            }
+        if (direction == Vector2.zero || movement.IsMakingStep) return;
 
-            if (direction.x < 0)
-            {
-                movement.MoveLeft(isMovingFreely);
-            }
-            else if (direction.x > 0)
-            {
-                movement.MoveRight(isMovingFreely);
-            }
-            else if (direction.y < 0)
-            {
-                movement.MoveDown(isMovingFreely);
-            }
-            else if (direction.y > 0)
-            {
-                movement.MoveUp(isMovingFreely);
-            }
+        // TODO: Call also when not moving freely and only for enemies that have not detected the player
+        GameLogic.Instance.MoveRemainingEnemiesRandomly();
+
+        bool isMovingFreely = inputMode == InputMode.MOVE_FREELY;
+        if (direction.x < 0)
+        {
+            movement.MoveLeft(isMovingFreely);
+        }
+        else if (direction.x > 0)
+        {
+            movement.MoveRight(isMovingFreely);
+        }
+        else if (direction.y < 0)
+        {
+            movement.MoveDown(isMovingFreely);
+        }
+        else if (direction.y > 0)
+        {
+            movement.MoveUp(isMovingFreely);
         }
     }
 

@@ -7,23 +7,22 @@ public class Enemy : MonoBehaviour
     public int DetectionRadius { get { return detectionRadius; } } 
     public int Id;
     private GridMovementEnemy movement;
+    private PlayerLink player;
     public Dice dice;
-    public bool isMoving = false;
-    public bool isDiceDoneRolling = true;
     private bool isCalculatingPath;
 
     public void Initialize()
     {
         Id = currentId++;
         movement = GetComponent<GridMovementEnemy>();
+        player = FindObjectOfType<PlayerLink>();
         movement.Initialize();
-        movement.ShowGrid(detectionRadius);
+        movement.OnDoneMovingToPlayer += OnDoneMoving;
     }
 
     private void OnEnable()
     {
         dice.DoneRolling += FindPathToPlayer;
-        movement.OnDoneMovingToPlayer += OnDoneMoving;
     }
 
     private void OnDisable()
@@ -45,15 +44,14 @@ public class Enemy : MonoBehaviour
     {
         GameLogic.Instance.SetEnemyDice(dice);
         dice.OnRollDice();
-        isDiceDoneRolling = false;
     }
 
     public void FindPathToPlayer()
     {
-        movement.ShowGrid(dice.DiceValue);
+        movement.UpdateMovementGrid(dice.DiceValue);
         Grid grid = FindObjectOfType<Grid>();
         Vector3 from = transform.position;
-        Vector3 to = FindObjectOfType<PlayerLink>().transform.position;
+        Vector3 to = player.transform.position;
         GameLogic.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
         isCalculatingPath = true;
     }
@@ -70,7 +68,7 @@ public class Enemy : MonoBehaviour
 
     public void InitRandomMove()
     {
-        movement.StartMovingRandomly();
+        movement.InitMoveRandomly();
     }
 
     public void UpdateSpriteRenderer()
@@ -78,13 +76,8 @@ public class Enemy : MonoBehaviour
         movement.UpdateSpriteRenderer();
     }
 
-    public void SwitchToMovementGrid()
+    public void UpdateDetection()
     {
-        movement.SwitchToMovementGrid();
-    }
-
-    public void SwitchToDetectionGrid()
-    {
-        movement.SwitchToDetectionGrid();
+        movement.UpdateDetection();
     }
 }
