@@ -1,62 +1,83 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private GridMovement movement;
+    private static int currentId = 0;
+    public int DetectionRadiusInactive;
+    public int DetectionRadiusActive;
+    public int Id;
+    private GridMovementEnemy movement;
+    private PlayerLink player;
     public Dice dice;
-    public bool isDiceDoneRolling = true;
-    public bool isMoving = false;
-    public bool isDoneWithTurn = true;
+    private bool isCalculatingPath;
 
-    private void Awake()
+    public void Initialize()
     {
-        movement = GetComponent<GridMovement>();
+        Id = currentId++;
+        movement = GetComponent<GridMovementEnemy>();
+        player = FindObjectOfType<PlayerLink>();
+        movement.Initialize();
+        movement.OnDoneMovingToPlayer += OnDoneMoving;
+    }
+
+    private void OnEnable()
+    {
+        dice.DoneRolling += FindPathToPlayer;
+    }
+
+    private void OnDisable()
+    {
+        dice.DoneRolling -= FindPathToPlayer;
+        movement.OnDoneMovingToPlayer -= OnDoneMoving;
     }
 
     private void Update()
     {
-        if (!isDiceDoneRolling)
+        if (isCalculatingPath && !GameLogic.Instance.IsCalculatingPath)
         {
-            isDiceDoneRolling = !dice.IsRolling;
-
-            if (isDiceDoneRolling)
-            {
-                movement.ShowMovementGrid(dice.DiceValue);
-                GameLogic.Instance.SwitchToEnemyMoveMode();
-            }
-        }
-
-        if (!isDoneWithTurn)
-        {
-            isDoneWithTurn = !movement.isMoving;
-            if (isDoneWithTurn)
-            {
-                movement.HideMovementGrid();
-                GameLogic.Instance.NextEnemyRollDice();
-            }
+            isCalculatingPath = false;
+            InitMoveToPlayer();
         }
     }
 
-
-    internal void OnRollDice()
+    public void OnRollDice()
     {
-        UIManager.Instance.SetEnemyDice(dice);
+        GameLogic.Instance.SetEnemyDice(dice);
         dice.OnRollDice();
-        isDiceDoneRolling = false;
     }
 
-    internal void InitEnemyMovement()
+    public void FindPathToPlayer()
     {
-        movement.isMoving = true;
-        isDoneWithTurn = false;
-        StartCoroutine(movement.StartMovingToPlayer());
+        movement.UpdateMovementGrid(dice.DiceValue);
+        Grid grid = FindObjectOfType<Grid>();
+        Vector3 from = transform.position;
+        Vector3 to = player.transform.position;
+        GameLogic.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
+        isCalculatingPath = true;
     }
 
-    internal void InitRandomEnemyMove()
+    public void OnDoneMoving()
     {
-        movement.StartMovingRandomly();
+        GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
+    }
+
+    public void InitMoveToPlayer()
+    {
+        movement.InitMovingToPlayer(dice.DiceValue);
+    }
+
+    public void InitRandomMove()
+    {
+        movement.InitMoveRandomly();
+    }
+
+    public void UpdateSpriteRenderer()
+    {
+        movement.UpdateSpriteRenderer();
+    }
+
+    public void UpdateDetection()
+    {
+        movement.UpdateDetection();
     }
 }

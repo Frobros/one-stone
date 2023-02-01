@@ -26,27 +26,35 @@ using TMPro;
 
 public class Dice : MonoBehaviour
 {
-	private RNG rng;
-    private bool isRolling;
-	public bool IsRolling { get { return isRolling; } }
+	private static RNG rng;
 	private void Awake()
 	{
-		rng = new RNG();
+		if (rng == null)
+        {
+			rng = new RNG();
+        }
 	}
 
     #region Dice Value
     [SerializeField] private float rollTime;
 	[SerializeField] private int diceValue;
 	public int DiceValue { get { return diceValue; } }
+	public delegate void DoneRollingHandler();
+	public event DoneRollingHandler DoneRolling;
+	private Coroutine rollDiceCoroutine;
 
+	public bool CompareIfGreater(Dice other)
+    {
+		return this.DiceValue > other.DiceValue;
+    }
 
 	public void OnRollDice()
     {
-		if (!isRolling)
+		if (rollDiceCoroutine != null)
         {
-			isRolling = true;
-			StartCoroutine(StartRollDice());
+			StopCoroutine(rollDiceCoroutine);
         }
+		rollDiceCoroutine = StartCoroutine(StartRollDice());
     }
 
 	private IEnumerator StartRollDice()
@@ -65,7 +73,7 @@ public class Dice : MonoBehaviour
 			elapsedTime += Time.deltaTime;
 			yield return null;
         }
-		isRolling = false;
+		DoneRolling?.Invoke();
 	}
     #endregion
 }

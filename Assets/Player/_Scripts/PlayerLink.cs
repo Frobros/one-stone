@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
 
 public enum InputMode
 {
@@ -17,77 +13,72 @@ public enum InputMode
 public class PlayerLink : MonoBehaviour
 {
     public Dice dice;
-    private GridMovement movement;
+    private GridMovementPlayer movement;
 
     private PlayerInput playerInput;
     private InputActionMap movementActionMap;
     private InputActionMap rollingDiceActionMap;
-    private bool isDiceDoneRolling = true;
-    public InputMode mode;
+    public InputMode inputMode;
 
-    private void Start()
+    private void OnEnable()
     {
-        movement = GetComponent<GridMovement>();
-        transform.position = movement.GetGridCenterPosition(transform.position);
-
-        UIManager.Instance.SetPlayerDice(dice);
+        dice.DoneRolling += OnDoneRolling;
     }
 
-    internal void Initialize()
+    private void OnDisable()
     {
+        dice.DoneRolling -= OnDoneRolling;
+    }
+
+    public void Initialize()
+    {
+        // Initialize inputs
         playerInput = GetComponent<PlayerInput>();
         movementActionMap = playerInput.actions.FindActionMap("Move");
         rollingDiceActionMap = playerInput.actions.FindActionMap("ThrowDice");
+
+        // Initialize movement components
+        movement = GetComponent<GridMovementPlayer>();
+        movement.Initialize();
+        transform.position = movement.GetGridCenterPosition(transform.position);
     }
 
-    private void Update()
+    public void SwitchGameMode(GameMode gameMode)
     {
-        if (!isDiceDoneRolling)
+        switch (gameMode)
         {
-            isDiceDoneRolling = !dice.IsRolling;
-            if (isDiceDoneRolling)
-            {
-                movement.ShowMovementGrid(dice.DiceValue);
-                GameLogic.Instance.SwitchToPlayerMoveMode();
-            }
-        }
-    }
-
-    internal void SwitchToMoveFreelyMode()
-    {
-        if (mode != InputMode.MOVE_FREELY)
-        {
-            mode = InputMode.MOVE_FREELY;
-            movementActionMap.Enable();
-            rollingDiceActionMap.Disable();
-        }
-    }
-
-    public void SwitchToMoveMode()
-    {
-        if (mode != InputMode.MOVE)
-        {
-            mode = InputMode.MOVE;
-            movementActionMap.Enable();
-            rollingDiceActionMap.Disable();
-        }
-    }
-
-    internal void SwitchToRollDiceMode()
-    {
-        if (mode != InputMode.ROLL_DICE)
-        {
-            mode = InputMode.ROLL_DICE;
-            movementActionMap.Disable();
-            rollingDiceActionMap.Enable();
+            case GameMode.PLAYER_MOVE_FREELY:
+                if (inputMode != InputMode.MOVE_FREELY)
+                {
+                    inputMode = InputMode.MOVE_FREELY;
+                    rollingDiceActionMap.Disable();
+                    movementActionMap.Enable();
+                }
+                break;
+            case GameMode.PLAYER_ROLL_DICE:
+                if (inputMode != InputMode.ROLL_DICE)
+                {
+                    inputMode = InputMode.ROLL_DICE;
+                    movementActionMap.Disable();
+                    rollingDiceActionMap.Enable();
+                }
+                break;
+            case GameMode.PLAYER_MOVE_DICE_ROLL:
+                if (inputMode != InputMode.MOVE)
+                {
+                    inputMode = InputMode.MOVE;
+                    rollingDiceActionMap.Disable();
+                    movementActionMap.Enable();
+                }
+                break;
         }
     }
 
     internal void DisableControls()
     {
-        if (mode != InputMode.DISABLED)
+        if (inputMode != InputMode.DISABLED)
         {
-            mode = InputMode.DISABLED;
+            inputMode = InputMode.DISABLED;
             movementActionMap.Disable();
             rollingDiceActionMap.Disable();
         }
@@ -95,23 +86,35 @@ public class PlayerLink : MonoBehaviour
 
     public void OnRollDice()
     {
-        isDiceDoneRolling = false;
         dice.OnRollDice();
-        UIManager.Instance.OnPlayerRollDice();
     }
-    public void OnPlace()
+
+    public void OnDoneRolling()
     {
-        if (mode == InputMode.MOVE)
+        movement.ShowMovementGrid(dice.DiceValue);
+        GameLogic.Instance.SwitchMode(GameMode.PLAYER_MOVE_DICE_ROLL);
+    }
+
+    public void OnPlace(InputAction.CallbackContext context)
+    {
+        if (!context.started) return;
+        
+        if (inputMode == InputMode.MOVE)
         {
-            movement.SetMovementGridActive(false);
             DisableControls();
-            GameLogic.Instance.SwitchToEnemyRollDiceMode();
-        }
-        else if (mode == InputMode.MOVE_FREELY)
-        {
-            movement.SetMovementGridActive(false);
-            GameLogic.Instance.SwitchToPlayerRollDiceMode();
-        }
+            movement.OnHideMovementGrid();
+            var cell = movement.WorldToCell(transform.position);
+            GameLogic.Instance.UpdateEnemyDetection();
+            if (GameLogic.Instance.IsBaseTile(cell) || !GameLogic.Instance.IsDetectedByAnyEnemy())
+            {
+                GameLogic.Instance.ClearEncounteredEnemies();
+                GameLogic.Instance.SwitchMode(GameMode.PLAYER_MOVE_FREELY);
+            }
+            else
+            {
+                GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
+            }
+        }   
     }
 
     public void OnReload()
@@ -122,30 +125,27 @@ public class PlayerLink : MonoBehaviour
     public void OnMove(InputAction.CallbackContext directionValue)
     {
         Vector2 direction = directionValue.ReadValue<Vector2>();
-        if (direction != Vector2.zero)
-        {
-            bool isMovingFreely = mode == InputMode.MOVE_FREELY;
-            if (isMovingFreely && !movement.isMakingStep)
-            {
-                GameLogic.Instance.PlayerMakingFreeMove();
-            }
+        if (direction == Vector2.zero || movement.IsMakingStep) return;
 
-            if (direction.x < 0)
-            {
-                movement.MoveLeft(isMovingFreely);
-            }
-            else if (direction.x > 0)
-            {
-                movement.MoveRight(isMovingFreely);
-            }
-            else if (direction.y < 0)
-            {
-                movement.MoveDown(isMovingFreely);
-            }
-            else if (direction.y > 0)
-            {
-                movement.MoveUp(isMovingFreely);
-            }
+        // TODO: Call also when not moving freely and only for enemies that have not detected the player
+        GameLogic.Instance.MoveRemainingEnemiesRandomly();
+
+        bool isMovingFreely = inputMode == InputMode.MOVE_FREELY;
+        if (direction.x < 0)
+        {
+            movement.MoveLeft(isMovingFreely);
+        }
+        else if (direction.x > 0)
+        {
+            movement.MoveRight(isMovingFreely);
+        }
+        else if (direction.y < 0)
+        {
+            movement.MoveDown(isMovingFreely);
+        }
+        else if (direction.y > 0)
+        {
+            movement.MoveUp(isMovingFreely);
         }
     }
 
@@ -155,5 +155,10 @@ public class PlayerLink : MonoBehaviour
         {
             OnReload();
         }
+    }
+
+    internal float GetShadowAlphaAt(Vector3Int gridPosition)
+    {
+        return this.movement.GetShadowAlphaAt(gridPosition);
     }
 }
