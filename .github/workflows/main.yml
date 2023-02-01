@@ -1,6 +1,7 @@
 name: Test, Build, and Deploy via GameCI and Butler  🎮
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - release
@@ -107,7 +108,7 @@ jobs:
       - name: Install Butler, zip the build and push it to itch.io
         shell: bash
         env:
-          BUTLER_API_KEY: ${{ secrets.API_KEY }}
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
           cd ~
           echo ------------------------------------------------------------------------
@@ -124,6 +125,7 @@ jobs:
           echo ------------------------------------------------------------------------
           cd work/one-stone/one-stone/build/WebGL/WebGL
           zip -r ~/current-build.zip .
+          chmod +x ~/butler
           echo ------------------------------------------------------------------------
           echo Pushing current-build.zip to itch.io 
           echo ------------------------------------------------------------------------
