@@ -3,8 +3,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private static int currentId = 0;
-    [SerializeField] private int detectionRadius;
-    public int DetectionRadius { get { return detectionRadius; } } 
+    public int DetectionRadiusInactive;
+    public int DetectionRadiusActive;
     public int Id;
     private GridMovementEnemy movement;
     private PlayerLink player;

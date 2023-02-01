@@ -72,7 +72,7 @@ Tilemap:
     m_Data: {r: 1.6333736e+29, g: 1.6333736e+29, b: 1.6333736e+29, a: 1.6333736e+29}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 0.95600307, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.5324314, b: 0, a: 1}
   m_Origin: {x: -5, y: -6, z: 0}
   m_Size: {x: 11, y: 10, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -218,7 +218,7 @@ Tilemap:
     m_Data: {r: 1.6333736e+29, g: 1.6333736e+29, b: 1.6333736e+29, a: 1.6333736e+29}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 0.19245279, b: 0.19245279, a: 1}
+  m_Color: {r: 0.15598075, g: 0.6509434, b: 0.3031135, a: 0.8745098}
   m_Origin: {x: -5, y: -6, z: 0}
   m_Size: {x: 11, y: 10, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -301,9 +301,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7908dbb0c7b451f47b8ac300994a5a7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tile: {fileID: 11400000, guid: d2d6d8772a503be4388365887b038886, type: 2}
-  movementGrid: {fileID: 6289673837528076868}
-  detectionGrid: {fileID: 251328534670481924}
+  Tile: {fileID: 11400000, guid: d2d6d8772a503be4388365887b038886, type: 2}
+  MovementGrid: {fileID: 6289673837528076868}
+  DetectionGrid: {fileID: 251328534670481924}
+  DetectionGridActiveColor: {r: 1, g: 0.043082956, b: 0, a: 0.78431374}
+  DetectionGridInactiveColor: {r: 0.04705882, g: 0.20535314, b: 0.8, a: 0.78431374}
 --- !u!1001 &3797767748925488458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -318,6 +320,14 @@ PrefabInstance:
     - target: {fileID: 5423046256619331757, guid: 384e870662a16ae4ea51c5b0118b71a3, type: 3}
       propertyPath: detectionRadius
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5423046256619331757, guid: 384e870662a16ae4ea51c5b0118b71a3, type: 3}
+      propertyPath: DetectionRadiusActive
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5423046256619331757, guid: 384e870662a16ae4ea51c5b0118b71a3, type: 3}
+      propertyPath: DetectionRadiusInactive
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5423046256619331758, guid: 384e870662a16ae4ea51c5b0118b71a3, type: 3}
       propertyPath: m_RootOrder

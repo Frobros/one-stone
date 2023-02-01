@@ -38,8 +38,14 @@ public class ShadowNode
         {
             this.walkCost = _previousWalkCost + penalty;
         }
-        this.alpha = this.walkCost / this.maxDistance;
-        this.alpha *= alpha;
+        this.alpha = EaseOut(this.walkCost / this.maxDistance);
+    }
+
+    private float EaseOut(float value)
+    {
+        var ease = value * value * value;
+        return Mathf.Clamp(value, 0f, 1f);
+
     }
 
     public List<ShadowNode> UnfoldNode(float penalty)

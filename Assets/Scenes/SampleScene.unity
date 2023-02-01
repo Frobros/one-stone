@@ -540,6 +540,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1839735485 &1685071224 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 1785475475, guid: 696df99fdfb161c479d3055f552b11fe, type: 3}
+  m_PrefabInstance: {fileID: 2033480064}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1990828031
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,6 +834,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 785623852, guid: 696df99fdfb161c479d3055f552b11fe, type: 3}
+      propertyPath: radius
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 785623852, guid: 696df99fdfb161c479d3055f552b11fe, type: 3}
+      propertyPath: PENALTY
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785475473, guid: 696df99fdfb161c479d3055f552b11fe, type: 3}
+      propertyPath: Tile
+      value: 
+      objectReference: {fileID: 11400000, guid: d2d6d8772a503be4388365887b038886, type: 2}
+    - target: {fileID: 1785475473, guid: 696df99fdfb161c479d3055f552b11fe, type: 3}
+      propertyPath: MovementGrid
+      value: 
+      objectReference: {fileID: 1685071224}
     - target: {fileID: 8868470295945481105, guid: 696df99fdfb161c479d3055f552b11fe, type: 3}
       propertyPath: m_RootOrder
       value: 3

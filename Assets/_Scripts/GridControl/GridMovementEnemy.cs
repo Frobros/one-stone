@@ -137,8 +137,17 @@ public class GridMovementEnemy : GridMovement
 
     public void UpdateDetection()
     {
-        grid.OnUpdateDetectionGrid(transform.position, enemy.DetectionRadius);
         var isPlayerDetectedNow = IsPlayerInDetectionRange();
+
+        if (isPlayerDetectedNow)
+        {
+            grid.OnUpdateDetectionGridActive(transform.position, enemy.DetectionRadiusActive);
+        }
+        else
+        {
+            grid.OnUpdateDetectionGridInactive(transform.position, enemy.DetectionRadiusInactive);
+        }
+
         if (isPlayerDetected && !isPlayerDetectedNow)
         {
             OnHideMovementGrid();

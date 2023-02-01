@@ -5,9 +5,11 @@ using System;
 
 public class SpaceGrid : MonoBehaviour
 {
-    public TileBase tile;
-    public Tilemap movementGrid;
-    public Tilemap detectionGrid;
+    public TileBase Tile;
+    public Tilemap MovementGrid;
+    public Tilemap DetectionGrid;
+    public Color DetectionGridActiveColor;
+    public Color DetectionGridInactiveColor;
 
     private void Awake()
     {
@@ -17,7 +19,7 @@ public class SpaceGrid : MonoBehaviour
     public void OnUpdateMovementGrid(Vector3 position, int radius, bool isEnemy)
     {
         Debug.Log("Show Movement Radius!");
-        movementGrid.ClearAllTiles();
+        MovementGrid.ClearAllTiles();
         Vector3Int playerPositionInGrid = WorldToCell(position);
         HashSet<Vector3Int> pointSet = new HashSet<Vector3Int>();
         pointSet.Add(playerPositionInGrid);
@@ -55,13 +57,25 @@ public class SpaceGrid : MonoBehaviour
 
         foreach (Vector3Int point in pointSet)
         {
-            movementGrid.SetTile(point, tile);
+            MovementGrid.SetTile(point, Tile);
         }
+    }
+
+    public void OnUpdateDetectionGridActive(Vector3 position, int radius)
+    {
+        DetectionGrid.color = DetectionGridActiveColor;
+        OnUpdateDetectionGrid(position, radius);
+    }
+
+    public void OnUpdateDetectionGridInactive(Vector3 position, int radius)
+    {
+        DetectionGrid.color = DetectionGridInactiveColor;
+        OnUpdateDetectionGrid(position, radius);
     }
 
     public void OnUpdateDetectionGrid(Vector3 position, int radius)
     {
-        detectionGrid.ClearAllTiles();
+        DetectionGrid.ClearAllTiles();
         Vector3Int playerPositionInGrid = WorldToCell(position);
         HashSet<Vector3Int> pointSet = new HashSet<Vector3Int>();
         pointSet.Add(playerPositionInGrid);
@@ -99,54 +113,54 @@ public class SpaceGrid : MonoBehaviour
 
         foreach (Vector3Int point in pointSet)
         {
-            detectionGrid.SetTile(point, tile);
+            DetectionGrid.SetTile(point, Tile);
         }
-        detectionGrid.CompressBounds();
+        DetectionGrid.CompressBounds();
     }
 
     public Vector2 GetCellCenterWorld(Vector3Int cellIndex)
     {
-        return movementGrid.GetCellCenterWorld(cellIndex);
+        return MovementGrid.GetCellCenterWorld(cellIndex);
     }
 
     public Vector2 GetCellSize()
     {
-        return movementGrid.cellSize;
+        return MovementGrid.cellSize;
     }
 
     public void OnHideMovementGrid()
     {
-        movementGrid.ClearAllTiles();
+        MovementGrid.ClearAllTiles();
     }
     
     public Vector3Int GetGridCelll(Vector3 position)
     {
-        return movementGrid.WorldToCell(position);
+        return MovementGrid.WorldToCell(position);
     }
 
 
     public Vector3 GetGridCenterPosition(Vector3Int position)
     {
-        return movementGrid.CellToWorld(position) + 0.5f * movementGrid.cellSize;
+        return MovementGrid.CellToWorld(position) + 0.5f * MovementGrid.cellSize;
     }
 
     public bool IsWalkable(Vector3Int cellIndex)
     {
-        return movementGrid.GetTile(cellIndex) != null;
+        return MovementGrid.GetTile(cellIndex) != null;
     }
 
     public Vector3Int WorldToCell(Vector3 position)
     {
-        return movementGrid.WorldToCell(position);
+        return MovementGrid.WorldToCell(position);
     }
 
     public Vector3 CellToWorld(Vector3Int cellIndex)
     {
-        return movementGrid.CellToWorld(cellIndex);
+        return MovementGrid.CellToWorld(cellIndex);
     }
 
     public bool IsCellInDetectionRadius(Vector3Int playerCell)
     {
-        return detectionGrid.GetTile(playerCell) != null;
+        return DetectionGrid.GetTile(playerCell) != null;
     }
 }
