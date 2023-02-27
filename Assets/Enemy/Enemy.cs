@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -6,18 +7,17 @@ public class Enemy : MonoBehaviour
     public int DetectionRadiusInactive;
     public int DetectionRadiusActive;
     public int Id;
-    private GridMovementEnemy movement;
+    public GridMovementEnemy movement;
     private PlayerLink player;
     public Dice dice;
-    private bool isCalculatingPath;
 
     public void Initialize()
     {
         Id = currentId++;
-        movement = GetComponent<GridMovementEnemy>();
         player = FindObjectOfType<PlayerLink>();
         movement.Initialize();
         movement.OnDoneMovingToPlayer += OnDoneMoving;
+        dice.SetMaximumDiceValue(3);
     }
 
     private void OnEnable()
@@ -31,15 +31,6 @@ public class Enemy : MonoBehaviour
         movement.OnDoneMovingToPlayer -= OnDoneMoving;
     }
 
-    private void Update()
-    {
-        if (isCalculatingPath && !GameLogic.Instance.IsCalculatingPath)
-        {
-            isCalculatingPath = false;
-            InitMoveToPlayer();
-        }
-    }
-
     public void OnRollDice()
     {
         GameLogic.Instance.SetEnemyDice(dice);
@@ -49,11 +40,22 @@ public class Enemy : MonoBehaviour
     public void FindPathToPlayer()
     {
         movement.UpdateMovementGrid(dice.DiceValue);
-        Grid grid = FindObjectOfType<Grid>();
         Vector3 from = transform.position;
         Vector3 to = player.transform.position;
-        GameLogic.Instance.StartPathFinding(grid.WorldToCell(from), grid.WorldToCell(to));
-        isCalculatingPath = true;
+        GameLogic.Instance.StartPathFinding(
+            movement.WorldToCell(from),
+            movement.WorldToCell(to),
+            () => this.movement.InitMovingToPlayer(dice.DiceValue)
+        );
+    }
+
+    public void FindPathBackHome()
+    {
+    }
+
+    public void SetPosition(Vector3Int _gridStartPosition)
+    {
+        movement.SetPosition(_gridStartPosition);
     }
 
     public void OnDoneMoving()
@@ -61,14 +63,9 @@ public class Enemy : MonoBehaviour
         GameLogic.Instance.SwitchMode(GameMode.ENEMY_ROLL_DICE);
     }
 
-    public void InitMoveToPlayer()
+    public void InitUndetectedMove()
     {
-        movement.InitMovingToPlayer(dice.DiceValue);
-    }
-
-    public void InitRandomMove()
-    {
-        movement.InitMoveRandomly();
+        movement.InitUndetectedMove();
     }
 
     public void UpdateSpriteRenderer()

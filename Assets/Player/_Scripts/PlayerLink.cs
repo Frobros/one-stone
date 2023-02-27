@@ -128,7 +128,7 @@ public class PlayerLink : MonoBehaviour
         if (direction == Vector2.zero || movement.IsMakingStep) return;
 
         // TODO: Call also when not moving freely and only for enemies that have not detected the player
-        GameLogic.Instance.MoveRemainingEnemiesRandomly();
+        GameLogic.Instance.MoveRemainingEnemies();
 
         bool isMovingFreely = inputMode == InputMode.MOVE_FREELY;
         if (direction.x < 0)

@@ -36,8 +36,9 @@ public class Dice : MonoBehaviour
 	}
 
     #region Dice Value
-    [SerializeField] private float rollTime;
-	[SerializeField] private int diceValue;
+    private float rollTime;
+	private int diceValue;
+	private int MaximumDiceValue = 6;
 	public int DiceValue { get { return diceValue; } }
 	public delegate void DoneRollingHandler();
 	public event DoneRollingHandler DoneRolling;
@@ -68,12 +69,17 @@ public class Dice : MonoBehaviour
             {
 				switchTime += switchTimeIncrement;
 				switchTimeIncrement = Mathf.Lerp(0f, 0.05f * rollTime, elapsedTime/rollTime);
-				diceValue = rng.Next(1, 7);
+				diceValue = rng.Next(1, MaximumDiceValue+1);
             }
 			elapsedTime += Time.deltaTime;
 			yield return null;
         }
 		DoneRolling?.Invoke();
 	}
+
+    internal void SetMaximumDiceValue(int v)
+    {
+		MaximumDiceValue = v;
+    }
     #endregion
 }

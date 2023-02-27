@@ -29,7 +29,6 @@ public class GameLogic : MonoBehaviour
     public int levelWhenReload = 0;
 
     public List<Vector3Int> GridPathPositions {  get { return gridPathFinding.positions; } }
-    public bool IsCalculatingPath { get { return gridPathFinding.isCalculating; } }
 
     #region Singleton
 
@@ -211,12 +210,12 @@ public class GameLogic : MonoBehaviour
 
     #region Enemy
 
-    internal void MoveRemainingEnemiesRandomly()
+    internal void MoveRemainingEnemies()
     {
         var remainingEnemies = sceneEnemies.Where(x => !encounteredEnemies.Contains(x));
         foreach (var enemy in remainingEnemies)
         {
-            enemy.InitRandomMove(); 
+            enemy.InitUndetectedMove(); 
         }
     }
 
@@ -227,9 +226,9 @@ public class GameLogic : MonoBehaviour
         uiManager.SetEnemyDice(dice);
     }
 
-    public void StartPathFinding(Vector3Int fromCell, Vector3Int toCell)
+    public void StartPathFinding(Vector3Int fromCell, Vector3Int toCell, Action callback)
     {
-        gridPathFinding.StartPathFinding(fromCell, toCell);
+        gridPathFinding.StartPathFinding(fromCell, toCell, callback);
     }
    #endregion
 }

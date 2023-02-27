@@ -10,6 +10,12 @@ public class GridMovementEnemy : GridMovement
 
     [SerializeField]
     private bool isPlayerDetected;
+    private bool isCalculatingPath;
+
+    [SerializeField]
+    private bool isMovingBackHome;
+    private Vector3Int gridStartPosition;
+    private List<Vector3Int> pathHome = new List<Vector3Int>();
 
     public delegate void OnDoneMoving();
     public event OnDoneMoving OnDoneMovingToPlayer;
@@ -21,13 +27,37 @@ public class GridMovementEnemy : GridMovement
         player = FindObjectOfType<PlayerLink>();
         UpdateSpriteRenderer(false);
         UpdateDetection();
+        transform.position = CellToWorld(gridStartPosition);
     }
-
-    public void InitMoveRandomly()
+        
+    public void InitUndetectedMove()
     {
         if (isMakingStep) return;
 
         isMakingStep = true;
+        if (isMovingBackHome)
+        {
+            StartMoveHome();
+        }
+        else
+        {
+            StartRandomMove();
+        }
+
+    }
+
+    public Vector3 CellToWorld(Vector3Int gridStartPosition)
+    {
+        return grid.CellToWorld(gridStartPosition);
+    }
+
+    internal void SetPosition(Vector3Int _gridStartPosition)
+    {
+        gridStartPosition = _gridStartPosition;
+    }
+
+    private void StartRandomMove()
+    {
         List<Vector3Int> positions = new List<Vector3Int>();
         Vector3Int pos = grid.WorldToCell((Vector2)transform.position + up);
         if (GameLogic.Instance.IsWalkableTile(pos, true))
@@ -55,6 +85,11 @@ public class GridMovementEnemy : GridMovement
         StartCoroutine(Move(direction));
     }
 
+    private void StartMoveHome()
+    {
+        StartCoroutine(MoveHome());
+    }
+
     public override IEnumerator Move(Vector2 direction)
     {
         float elapsedTime = 0;
@@ -72,6 +107,50 @@ public class GridMovementEnemy : GridMovement
         UpdateSpriteRenderer();
         UpdateDetection();
         isMakingStep = false;
+    }
+
+    public IEnumerator MoveHome()
+    {
+        Vector3Int from = WorldToCell(transform.position);
+        var index = 0;
+        if (!pathHome.Contains(from))
+        {
+            isCalculatingPath = false;
+            GameLogic.Instance.StartPathFinding(
+                from,
+                gridStartPosition,
+                IsDoneCalculatingPath
+            );
+            yield return new WaitUntil(() => isCalculatingPath);
+            pathHome = new List<Vector3Int>(GameLogic.Instance.GridPathPositions);
+        }
+
+        index = pathHome.IndexOf(from);
+
+        float elapsedTime = 0;
+        Vector2 originalPosition = grid.GetCellCenterWorld(pathHome[index]);
+        Vector2 targetPosition = grid.GetCellCenterWorld(pathHome[index + 1]);
+        SetSprite(targetPosition - originalPosition);
+        Debug.Log("FROM: " + originalPosition);
+        Debug.Log("TO: " + targetPosition);
+
+        while (elapsedTime < MOVE_TIME)
+        {
+            transform.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime / MOVE_TIME);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        UpdateSpriteRenderer();
+        UpdateDetection();
+        isMakingStep = false;
+        isMovingBackHome = index + 2 < pathHome.Count;
+    }
+
+    public void IsDoneCalculatingPath()
+    {
+        isCalculatingPath = true;
     }
 
     public void InitMovingToPlayer(int diceValue)
@@ -151,11 +230,13 @@ public class GridMovementEnemy : GridMovement
         if (isPlayerDetected && !isPlayerDetectedNow)
         {
             OnHideMovementGrid();
+            isMovingBackHome = true;
             GameLogic.Instance.RemoveEnemyFromEncounter(enemy);
         }
         else if (!isPlayerDetected && isPlayerDetectedNow)
         {
             GameLogic.Instance.AddEnemyToEncounter(enemy);
+            pathHome.Clear();
         }
         isPlayerDetected = isPlayerDetectedNow;
     }

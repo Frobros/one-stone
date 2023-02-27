@@ -1,27 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GridPathFinding : MonoBehaviour
 {
 
     public List<Vector3Int> positions;
-    public bool isCalculating = false;
     public float repeatPerSecond = 0f;
 
     private List<GridPathNode> nodes = new List<GridPathNode>();
     private List<GridPathNode> expandedNodes = new List<GridPathNode>();
 
-    public void StartPathFinding(Vector3Int fromCell, Vector3Int toCell)
+    public void StartPathFinding(Vector3Int fromCell, Vector3Int toCell, Action callback)
     {
-        if (!isCalculating)
-        {
-            isCalculating = true;
-            StartCoroutine(FindPath(fromCell, toCell));
-        }
+        StartCoroutine(FindPath(fromCell, toCell, callback));
     }
 
-    private IEnumerator FindPath(Vector3Int fromCell, Vector3Int toCell)
+    private IEnumerator FindPath(Vector3Int fromCell, Vector3Int toCell, Action callback)
     {
         GameLogic.Instance.GridTerrainManager.ClearNodes();
         positions = new List<Vector3Int>();
@@ -32,7 +28,7 @@ public class GridPathFinding : MonoBehaviour
         int hCost = Mathf.Abs(targetDirection.x) + Mathf.Abs(targetDirection.y);
         GridPathNode currentNode = new GridPathNode(null, fromCell, 0, hCost, hCost);
         float paintInterval = 1f / repeatPerSecond;
-        //float time = 0f;
+        float time = 0f;
         while (currentNode.hCost > 1)
         {
             ExpandNode(currentNode, toCell);
@@ -45,12 +41,12 @@ public class GridPathFinding : MonoBehaviour
                 yield break;
             }
             currentNode = nodes[0];
-            //time += Time.deltaTime;
-            //if (time >= paintInterval)
-            //{
-            //    GameLogic.Instance.PaintPath(currentNode);
-            //    time %= paintInterval;
-            //}
+            time += Time.deltaTime;
+            if (time >= paintInterval)
+            {
+                GameLogic.Instance.PaintPath(currentNode);
+                time %= paintInterval;
+            }
             yield return null;
         }
 
@@ -63,8 +59,7 @@ public class GridPathFinding : MonoBehaviour
         }
         positions.Add(fromCell);
         positions.Reverse();
-
-        isCalculating = false;
+        callback();
     }
 
     private void ExpandNode(GridPathNode currentNode, Vector3Int to)
